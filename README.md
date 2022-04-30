@@ -110,5 +110,5 @@
 
 > 공지사항, 사소한 질문, 스터디 관련 질문, 경조사 알림 등은 해당 오픈채팅방을 활용하도록 할게요! 👩‍👩‍👧‍👦  
 
-[카카오톡 오픈채팅](https://open.kakao.com/o/gpBePVde)
-
+[카카오톡 오픈채팅](https://open.kakao.com/o/gpBePVde)<br>
+참여 코드: `2digits`
