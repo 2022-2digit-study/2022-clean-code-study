@@ -48,11 +48,106 @@
 신속하게 패턴을 파악하여 개발자의 이해를 높일 수 있습니다.
 
 #### Q. 어떤게 더 읽기 쉽나요?
-<img width="779" alt="image" src="https://user-images.githubusercontent.com/59782504/167638095-1a74d681-812c-4274-b52d-26eefc8804a4.png">
+
+```css
+@charset "UTF-8";/*!
+ * Bootstrap v5.2.0-beta1 (https://getbootstrap.com/)
+ * Copyright 2011-2022 The Bootstrap Authors
+ * Copyright 2011-2022 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */:root{--bs-blue:#0d6efd;--bs-indigo:#6610f2;--bs-purple:#6f42c1;--bs-pink:#d63384;--bs-red:#dc3545;--bs-orange:#fd7e14;--bs-yellow:#ffc107;
+ --bs-green:#198754;--bs-teal:#20c997;--bs-cyan:#0dcaf0;--bs-black:#000;--bs-white:#fff;--bs-gray:#6c757d;--bs-gray-dark:#343a40;--bs-gray-100:#f8f9fa;
+ --bs-gray-200:#e9ecef;--bs-gray-300:#dee2e6;--bs-gray-400:#ced4da;--bs-gray-500:#adb5bd;--bs-gray-600:#6c757d;--bs-gray-700:#495057;
+ --bs-gray-800:#343a40;--bs-gray-900:#212529;--bs-primary:#0d6efd;--bs-secondary:#6c757d;--bs-success:#198754;--bs-info:#0dcaf0;--bs-warning:#ffc107;
+ --bs-danger:#dc3545;--bs-light:#f8f9fa;--bs-dark:#212529;--bs-primary-rgb:13,110,253;--bs-secondary-rgb:108,117,125;--bs-success-rgb:25,135,84;
+ --bs-info-rgb:13,202,240;--bs-warning-rgb:255,193,7;--bs-danger-rgb:220,53,69;--bs-light-rgb:248,249,250;--bs-dark-rgb:33,37,41;
+ --bs-white-rgb:255,255,255;--bs-black-rgb:0,0,0;--bs-body-color-rgb:33,37,41;--bs-body-bg-rgb:255,255,255;--bs-font-sans-serif:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+ --bs-font-monospace:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;--bs-gradient:linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));--bs-body-font-family:var(--bs-font-sans-serif);--bs-body-font-size:1rem;--bs-body-font-weight:400;--bs-body-line-height:1.5;--bs-body-color:#212529;--bs-body-bg:#fff;--bs-border-width:1px;--bs-border-style:solid;--bs-border-color:#dee2e6;
+ --bs-border-color-translucent:rgba(0, 0, 0, 0.175);--bs-border-radius:0.375rem;--bs-border-radius-sm:0.25rem;--bs-border-radius-lg:0.5rem;
+ --bs-border-radius-xl:1rem;--bs-border-radius-2xl:2rem;--bs-border-radius-pill:50rem;--bs-heading-color: ;
+ --bs-link-color:#0d6efd;--bs-link-hover-color:#0a58ca;--bs-code-color:#d63384;--bs-highlight-bg:#fff3cd}
+```
 
 ▲ 난독화가 적용된 구조화 되지 않은 코드.
 
-<img width="707" alt="image" src="https://user-images.githubusercontent.com/59782504/167638710-0c335dd2-5803-4b56-af3b-77f1666c3bf3.png">
+```css
+@charset "UTF-8";
+/*!
+ * Bootstrap v5.2.0-beta1 (https://getbootstrap.com/)
+ * Copyright 2011-2022 The Bootstrap Authors
+ * Copyright 2011-2022 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
+:root {
+    --bs-blue: #0d6efd;
+    --bs-indigo: #6610f2;
+    --bs-purple: #6f42c1;
+    --bs-pink: #d63384;
+    --bs-red: #dc3545;
+    --bs-orange: #fd7e14;
+    --bs-yellow: #ffc107;
+    --bs-green: #198754;
+    --bs-teal: #20c997;
+    --bs-cyan: #0dcaf0;
+    --bs-black: #000;
+    --bs-white: #fff;
+    --bs-gray: #6c757d;
+    --bs-gray-dark: #343a40;
+    --bs-gray-100: #f8f9fa;
+    --bs-gray-200: #e9ecef;
+    --bs-gray-300: #dee2e6;
+    --bs-gray-400: #ced4da;
+    --bs-gray-500: #adb5bd;
+    --bs-gray-600: #6c757d;
+    --bs-gray-700: #495057;
+    --bs-gray-800: #343a40;
+    --bs-gray-900: #212529;
+    --bs-primary: #0d6efd;
+    --bs-secondary: #6c757d;
+    --bs-success: #198754;
+    --bs-info: #0dcaf0;
+    --bs-warning: #ffc107;
+    --bs-danger: #dc3545;
+    --bs-light: #f8f9fa;
+    --bs-dark: #212529;
+    --bs-primary-rgb: 13, 110, 253;
+    --bs-secondary-rgb: 108, 117, 125;
+    --bs-success-rgb: 25, 135, 84;
+    --bs-info-rgb: 13, 202, 240;
+    --bs-warning-rgb: 255, 193, 7;
+    --bs-danger-rgb: 220, 53, 69;
+    --bs-light-rgb: 248, 249, 250;
+    --bs-dark-rgb: 33, 37, 41;
+    --bs-white-rgb: 255, 255, 255;
+    --bs-black-rgb: 0, 0, 0;
+    --bs-body-color-rgb: 33, 37, 41;
+    --bs-body-bg-rgb: 255, 255, 255;
+    --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+    --bs-body-font-family: var(--bs-font-sans-serif);
+    --bs-body-font-size: 1rem;
+    --bs-body-font-weight: 400;
+    --bs-body-line-height: 1.5;
+    --bs-body-color: #212529;
+    --bs-body-bg: #fff;
+    --bs-border-width: 1px;
+    --bs-border-style: solid;
+    --bs-border-color: #dee2e6;
+    --bs-border-color-translucent: rgba(0, 0, 0, 0.175);
+    --bs-border-radius: 0.375rem;
+    --bs-border-radius-sm: 0.25rem;
+    --bs-border-radius-lg: 0.5rem;
+    --bs-border-radius-xl: 1rem;
+    --bs-border-radius-2xl: 2rem;
+    --bs-border-radius-pill: 50rem;
+    --bs-heading-color: ;
+    --bs-link-color: #0d6efd;
+    --bs-link-hover-color: #0a58ca;
+    --bs-code-color: #d63384;
+    --bs-highlight-bg: #fff3cd
+}
+```
 
 ▲ 정리 도구를 통해 포매팅된 코드
 
@@ -82,8 +177,6 @@ my_car        = "Martiz"
 **2. 뻥 뚫린 고속도로**
 
 ![img_2](https://img1.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/202004/13/yonhap/20200413115201692ourh.jpg)
-
-~~인간이라면 자신의 자동차를 사지로 내몰고 싶지는 않을 겁니다.~~<br>
 
 ### 이런 도로의 비교는 **소프트웨어 개발**과 꽤 비슷합니다.
 
@@ -121,7 +214,6 @@ my_car        = "Martiz"
 
 > _"주석은 코드로 아이디어를 제대로 표현하지 못했음을 나타내는 것이다."_ (p.24)
 
-~~(뜨끔)~~
 
 ### 주석이 좋지 않은 이유
 1. 주석은 초보자로 하여금 읽기 어렵게 한다 (코드에 포함되어 있기 때문)
@@ -143,7 +235,6 @@ def if_way_is_exist_go_home_or_go_near_sauna():
     The Logic
     ...
 ```
-`개인적인 생각`: 이런 미친 개발자는 없을 것입니다. 이런 함수명은 까먹기 쉽게 하며, 이렇게 이름을 지을 거라면 주석이 더 낫다고 생각합니다.
 
 ---
 
@@ -262,7 +353,6 @@ def get_user_name(user):
 아닙니다. 위에 제가 적은 코드 예시와 가이드들을 살펴보아도, `docstring`이 효과적으로 동작하기 위해서는 보다 상세한 설명을 기입해야 합니다.<br>
 <br>
 다만 그러면 그럴 수록, 필연적으로 코드보다 `docstring`이 크기가 커지고 맙니다.<br>
-`개인적인 생각`: _개발자는 항상 어떻게 하면 코드와 설명의 비율을 조정해서 직관적으로 이해가 되는 것을 항상 고민해야 하는.. 그런 직업인 것 같습니다._<br<
 <br>
 어떤 좋은 가이드를 봐도, 어떤 블로그를 보아도 이상적인 설명의 해답은 **설명 없이 코드만 보아도 직관적으로 이해가 되는 코드**입니다. ~~(물론 천국에 있는 코드겠지요)~~
 
@@ -317,8 +407,6 @@ def get_user_name(user: User) -> UserName:
 `PEP484`에서는 이에 대한 답을 들을 수 있습니다.
 
 > _"파이썬은 여전히 동적인 타입의 언어로 남을 것이다. 타입 힌트를 필수로 하자거나 심지어 관습으로 하자는 것은 전혀 아니다."_
-
-단, 개인적으로는 다른 사람과 함께하는 협업일 수록, 자신이 짠 코드가 어렵게 느껴진다면, 타입힌트는 꼭 필요할 것이라 생각합니다.
 
 ### 확인
 
