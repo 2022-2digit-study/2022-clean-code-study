@@ -316,3 +316,151 @@ def mark_coordinate(grid, coord):
 1. 외부에서 사용할 때 해당 코드들은 마치 파이썬이 문제를 해결한 것처럼 보임
 2. 구성이 간단하고 위임을 통해 문제를 해결함 (객체들이 모두 최소한의 논리를 사용)
 
+## 객체의 동적 속성
+
+동적으로 어떤 값을 자료 구조에 담고 싶다면 그에 좋은 객체가 이미 파이썬에 존재한다.
+바로 Dictionary이다
+
+```python
+>>> car_info = dict()
+>>> dict['color'] = 'red'
+>>> dict['name'] = 'Ferarri'
+>>> car_info['color']
+'red'
+>>> car_info['name']
+'Ferarri'
+```
+딕셔너리는 불변의 값, 즉 수정이 불가능한 자료를 키로 사용하여 자료를 저장하는 해쉬맵 자료구조이다.(파이썬의 딕셔너리는 매우 효율적이라고 알려져 있다.)
+
+> 특히 동적인 자료구조를 저장하는데 있어 딕셔너리(≒ Hash Map)의 경우 다른 자료구조에서 거의 유일하게 키(key)라는 값을 이용해서 사용자가 제어할 수 있는 자료구조이니 알아두는 편이 좋다.
+
+단 위의 예시는 사물을 구현한 것이기에 딕셔너리에 저장하기 보단, 다음과 같이 클래스로 구현하면 여러 메소드를 구현 할 수 있을 것이다.
+
+```python
+class Car:
+    def __init__(self, name, color):
+        self.name = name
+        self.color = color
+ 
+my_car = Car("Ferarri", "red")
+print( f" name: {my_car.name} color: {my_car.color}")
+```
+
+클래스로 정의하니 확실히 가독성이 좋아졌고, 메서드의 확장도 충분히 가능해보인다. 그렇다면 인스턴스의 멤버변수는 파이썬이 어떻게 알아낼까? 
+
+### \_\_getattr\_\_
+
+my_car.name을 호출하면 파이썬은 객체의 사전에서 name을 찾아서 `__getattribute__`를 호출한다. 
+객체에 찾고 있는 속성이 없는 경우 속성 이름을 파라미터로 전달하여 `__getattr__('name')`을 호출한다.<br>
+이 값을 사용하면 반환 값을 제어할 수도 있고, 심지어는 새로운 속성을 만들어 낼 수 있다.<br>
+
+```python
+class DynamicAttributes:
+    def __init__(self, attribute):
+        self.attribute = attribute
+        
+    def __getattr__(self, attr):
+        if attr.startswith("fallback_ "):
+            name = attr.replace( "fallback_", "")
+            return f"(fallback resolved] {name}"
+        raise AttributeError(f"{self.__class__ .__name__}에는 {attr} 속성이 없음 . ")
+```
+#### 호출
+```python
+>>> dyn = DynamicAttributes("value") 
+>>> dyn.attribute
+'value'
+```
+▲ attribute 호출
+
+```python
+>>> dyn.fallback_test 
+'[fallback resolved] test'
+```
+▲ 멤버변수에 없는 값을 호출
+> 내부적으로 `dyn.__getattr__('fallback_test')`가 호출되어 처리된다.
+
+```python
+>>> dyn.__dict__["fallback_new"] = "new value" 
+>>> dyn.fallback_new
+'new value'
+```
+▲ 새로운 멤버변수를 동적으로 생성하기
+
+```python
+>>> getattr(dyn, "something" , "apple" ) 
+'apple'
+```
+`__getattr__`은 파이썬 내장 함수 `getattr()`에도 영향을 미친다.
+> 파이썬 내장함수 `getattr(instance, attribute_name, default_value)`는 `instance`의 멤버변수에 `attribute_name` 이라는 이름을 가진 멤버변수가 있는지를 검사하고, 없는 경우 `default_value`를 반환하는 함수이다.
+
+내장함수 `getattr`은 `dyn.something`을 호출하고, `__getattr__('something')`을 실행시킨다. 단, `something`은 `fallback_`으로 시작하지 않기 때문에 `AttributeError`가 발생하고, `getattr`은 `AttributeError`를 감지하여 `default_value`로 설정된 `apple`를 반환한다. 
+
+```python 
+>>> getattr(dyn, "fallback_hello" , "apple" ) 
+'(fallback resolved] hello'
+```
+▲ `if attr.startswith("fallback_"):` 의 조건을 통과하였기 때문에 값을 반환한 `__getattr__`함수는 `AttributeError`를 야기하지 않는다.
+
+## 호출형(callable) 객체
+
+클래스 명 뒤에 괄호`()`를 붙이면 생성자 메서드`__init__()`이 실행되며, 결과물인 `instance`를 반환한다.
+
+`__call__` 함수를 구현하면 `instance` 변수 뒤에 괄호가 올 경우 동작을 정의할 수 있다.
+
+```python
+from collections import defaultdict
+class CallCount:
+    def __init__(self):
+        self._counts = defaultdict(int)
+    def __call__(self, argument): 
+        self._counts[argument] += 1 
+        return self._counts[argument]
+```
+
+#### 호출
+
+```python
+>>> cc = CallCount() 
+>>> cc(1)
+1
+>>> cc(2)
+1
+>>> cc(1) 
+2
+>>> cc(1) 
+3
+>>> cc("something")
+1
+```
+▲ `CallCount` 클래스의 인스턴스 변수 `cc`를 통해 `__call__()` 함수를 호출
+
+> 후반부에 데코레이터 생성 시 해당 메서드를 구현하면 더 편리함을 알게 될 것이다. 
+
+## 파이썬에서 피해야 할 점
+해당 부분은 비교적 쉽게 발견할 수 있다. 많은 IDE에서 이를 경고하고 있기 떄문이다.
+
+### 변경 가능한(mutable)파라미터 기본 값
+파라미터에 디폴트 값을 설정하는 것은 매번 파라미터를 설정해야 하는 개발자의 피로를 줄여준다. 다만 수정이 가능한 변수로 설정하면 문제가 될 수 있다. 정확히는 값을 수정할 수 있는 변수라고 하겠다.
+```python
+def say_name(name = "Giraffe"):
+    print(name)
+```
+이 함수에서 문제될 것이 있는가? C++을 배운 혹자는 string은 문자 하나를 담는 자료형 char의 포인터 형태이기 때문에 mutable 하지 않냐고 반문할 수 있다.(C++ 포인터는 특정 값에 접근이 가능하며, 수정 역시 가능하다.)<br>
+<br>
+하지만 답은 문제될 것이 없다. <br>
+
+#### (+ɑ) 왜?
+왜냐하면 `name[0] = "R"` 과 같은 조작이 파이썬 문자열에서 불가능하기 때문이다. Python은 C++을 사용하여 만들어졌으며 python `str` 역시 C++ `string`의 확장이다. C++ `string`의 경우 `const char *` 타입의 포인터 변수로 구현되어 있는데 `const`는 상수의 선언이며, 자체로 수정 불가능한 값을 만든다. 따라서 이는 선언과 동시에 이루어지는 초기화 이외의 값 변경을 금지하는 상수의 선언을 뜻한다. 따라서 문자열은 주소가 없는 자료형(말 그대로 값)을 의미하는 원시 자료형(primitive type)처럼 취급된다.
+
+```python
+def say_shopping_cart(cart: list = []):
+    if "apple" not in cart:
+        print("사과는 꼭 사야하니 추가합니다.")
+        cart.append("apple")
+    print(cart)
+```
+
+이 코드는 앞서 말한 코드와는 조금 다르다. cart는 디폴트로 빈 리스트를 담고 있다. 하지만 앞서 문자열을 설명한 것과는 달리 python의 경우 변경가능한 자료형으로
+
+### 내장(built-in) 타입 확장
