@@ -248,7 +248,7 @@ class User:
 
 이터러블 객체를 살펴보기에 앞서서 이터러블과 이터레이터를 구분해보자.
 
-- 이터러블: `__iter__` 매직 메서들를 구현한 객체
+- 이터러블: `__iter__` 매직 메서들을 구현한 객체
 - 이터레이터: `__next__` 매직 메서드를 구현한 객체
 
 ~~(자세한 내용은 9회차에 기린님이 멋지게 다뤄주실 예정)~~
@@ -262,3 +262,57 @@ class User:
 객체가 `__iter__`나 `__next__` 중 하나를 포함하는지와 
 
 객체가 시퀀스이고 `__len__`과 `__getitem__`를 모두 가졌는지를 검사한다.
+
+## 컨테이너 객체
+
+`__contains__()` 메서드를 구현한 객체, 일반적으로 Boolean값을 반환하도록 구현
+
+해당 키워드는 `in` 키워드가 발견될 때 호출됨.
+
+### 사용 예
+x, y를 멤버변수로 갖고 있는 coord가 그리드의 영역에 있는지 검사하고 표시하고 싶을 때, 일반적인 구현은 다음과 같음
+
+```python
+# less Pythonic
+def mark_coordinate(grid, coord):
+    if 0 <= coord.x < grid.width and 0 <= coord.y < grid.height:
+        grid[coord] = MARKED
+```
+▲ 직관적으로 x, y가 무엇을 하는 지 알아보기 힘듦
+
+
+```python
+# more Pythonic
+class Boundaries:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+       
+    def __contains__(self, coord):
+        x, y = coord
+        return 0 <= x < self.width and 0 <= y < self.height
+        
+
+class Grid:
+    def__init__(self, width, height):
+        self.width = width
+        self.hegiht = height
+        self.limit = Boundaries(width, height) # 의도를 직관적으로 설명하였음.
+    
+    def __contains__():
+        return coord in self.limits
+
+```
+
+```python
+# Usage
+def mark_coordinate(grid, coord):
+    if coord in grid:
+        grid[coord] = MARKED
+```
+▲ in절을 통해 직관적으로 Grid 안에 있는지 체크하는 듯한 느낌을 받을 수 있음.
+
+### 장점
+1. 외부에서 사용할 때 해당 코드들은 마치 파이썬이 문제를 해결한 것처럼 보임
+2. 구성이 간단하고 위임을 통해 문제를 해결함 (객체들이 모두 최소한의 논리를 사용)
+
