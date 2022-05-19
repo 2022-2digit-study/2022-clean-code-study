@@ -44,12 +44,9 @@
 
 # 도서 📗
  
-> 인원 확정 후 아래의 도서 중 하나를 택할 예정입니다.
+> 아래의 도서로 스터디를 진행합니다.
 
-> 도서는 공동 구매 혹은 회사 지원을 통해 구매하고 전자책으로 만들어 공유할 예정입니다. 추후 따로 연락드리겠습니다.
-
-1. [클린 코드(Clean Code)](https://book.interpark.com/product/BookDisplay.do?_method=detail&sc.prdNo=213656258&gclid=Cj0KCQjwvLOTBhCJARIsACVldV1HiLbyvZNpX5cn7Y8bb6QQKnXCQISZ1MWi4d_ittLb5XR04PEbOuUaAhFAEALw_wcB)
-2. [파이썬 클린 코드](https://book.interpark.com/product/BookDisplay.do?_method=detail&sc.shopNo=0000400000&sc.prdNo=300134583&sc.saNo=003002001&bid1=search&bid2=product&bid3=title&bid4=001)
+[파이썬 클린 코드](https://book.interpark.com/product/BookDisplay.do?_method=detail&sc.shopNo=0000400000&sc.prdNo=300134583&sc.saNo=003002001&bid1=search&bid2=product&bid3=title&bid4=001)
 
 # 방식
 
