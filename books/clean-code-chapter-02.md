@@ -323,8 +323,8 @@ def mark_coordinate(grid, coord):
 
 ```python
 >>> car_info = dict()
->>> dict['color'] = 'red'
->>> dict['name'] = 'Ferarri'
+>>> car_info['color'] = 'red'
+>>> car_info['name'] = 'Ferarri'
 >>> car_info['color']
 'red'
 >>> car_info['name']
