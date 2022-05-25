@@ -1344,3 +1344,135 @@ def users_from_rows(dbrows) -> list :
 	]
 ```
 언뜻 봐도 언패킹을 활용한 뒤에 정의한 함수가 알아보기 쉽다. row에 인덱스를 사용하여 조회하는 방법 역시 많이 사용되는 방법이긴 하나, python에서는 이처럼 패킹/언패킹이라는 좋은 기능을 제공한다.
+
+## 함수 파라미터의 개수
+> _"이 섹션에서는 너무 많은 인자를 사용하는 함수나 메서드가 왜 나쁜 디자인(코드의 나쁜 냄새)의 징후인지를 살펴본다."_
+
+### 문제점
+함수의 파라미터가 많은 것이 왜 문제냐고 반문할 수 있을 것이다. 많은 함수 파라미터는 읽는 사람으로 하여금 힘들게 만들고, 무슨 역할을 하는지 파악하는데 오랜 시간이 걸리게 한다.<br>
+<br> 
+함수의 파라미터가 많을 수록 호출하는 함수와 밀접하게 결합될 가능성이 커진다. <br>
+아래의 코드를 보자
+```python
+def purchase(car_name, car_price, car_quentity, consumer_name, consumer_balance, employee_name, employee_point)
+	car_sell(car_name, car_price, car_quentity) 
+	...
+	
+```
+이 경우 보다시피 `purchase()`함수가 무엇을 처리하는지 알기 어렵다.<br>
+_(구매에만 관여하는지, 구매후 재고에도 관여하는지, 직원의 포인트를 관리하는지 등)_<br>
+<br>
+
+이 경우 두가지 문제점이 있다.<br>
+
+<br>
+1. 적절한 추상화가 이루어지지 않아 한눈에 함수를 파악하기 어렵다는 점
+2. 특정 작업을 하도록 의도되었기 때문에 다른 환경에서 `purchase()`함수를 사용하기 힘들다는 점
+
+### 해결책
+
+#### 1. 구체화
+구체화는 전달하는 파라미터를 모두 포함하는 하나의 객체를 만드는 것이다.<br>
+<br>
+함수의 인자로 객체를 넘기는 것으로 위 경우 가장 좋은 해결책이 될 수 있다.<br>
+예시를 위해 필자는 아래와 같이 위에 쓰여있는 함수를 기반으로 리펙토링하였다. 
+
+```python
+class Product:
+	def __init__(self, name, price, quentitiy)
+		self.name = name
+		self.price = price
+		self.quentity = quentity
+	...
+	
+class Car(Product):
+	...
+
+class Person:
+	def __init__(self, name)
+		self.name = name
+	...
+
+class Customer(Person):
+	def __init__(self, balance, **kwargs)
+		super().__init__(**kwargs)
+		self.balance
+	...
+
+class Employee(Person):
+	def __init__(self, point, **kwargs):
+		super().__init__(**kwargs)
+		self.point = point
+	...
+
+def purchase(product: Product):
+	product.quentity -= 1
+	...
+	
+def sell(employee):
+	employee.point += 10
+	...
+```
+
+클래스가 추가되어 코드 길이는 길어졌지만, 확장성과 추상화 측면에서 보다 쉽게 코드를 이해할 수 있다. <br>
+이렇게 구체화하여 해결하는 방법은 일반적으로 파라미터가 반복되는 형태가 아닐때 주로 권장되는 방식이다. <br>
+<br>
+단, 이 경우도 주의할 점이 있다. 앞서 말했 듯 함수는 전달받은 객체를 변경해서는 안 된다는 것이다.
+
+####  2. 가변인자
+> 이전 파트에서 다루었기 때문에 다시 다루진 않는다. 다만, 가변인자는 만능의 해결책은 아니다. 매우 동적이어서 유지보수하기가 어렵기 때문이다. 해당 값이 어떤 파라미터인지 찾아서 이를 분기하고 있다면, 함수를 분리하라는 신호일 수 있다.
+
+```
+def purchase(*arg)
+	car_sell(arg[0:3]) 
+	...
+```
+
+~~예를 들어 위의 경우 더 꼴보기 싫어질 수 있다.~~
+
+이전 방법(구체화)가 통하지 않으면 함수의 파라미터를 \*args, \*\*kwargs 등으로 변경하여 다양한 파라미터를 받도록 허용할 수 있다. <br>
+<br>
+그러나 이 경우 가독성을 거의 상실하기 떄문에 인터페이스에 대한 문서화를 하고 정확하게 사용했는지 확실히 해야한다.
+
+## 소프트웨어의 독립성
+독립성은 일반적인 단어로 여러 의미나 해석을 가질 수 있으나 소프트웨어에서의 독립성은 모듈 클래스 또는 함수를 변경하면 수정한 컴포넌트가 외부 세계에 영향을 미치지 않아야한다는 것을 의미한다.
+> 바람직하지만 항상 가능한 것은 아니다.
+
+예시를 살펴보자 세금과 할인율을 고려하여 가격을 계산하는 함수를 가지고 있고, 최종 계산된 값을 포매팅하고 싶다고 해보자.
+```python
+
+def calculate_price(base_price: float, tax: float, discount: float) -> float:
+	return (base_price * (1 + tax)) * (1 - discount)
+
+def show_price(price: float) -> str: 
+	return "$ {0:,.2f}".format(price)
+	
+def str_final_price(base_price: float, tax: float, discount: float , fmt_function=str) -> str: 
+	return fmt_function(calculate_price(base_price, tax, discount))
+```
+위쪽 두개의 함수는 독립성을 갖는다. 하나를 변경해도 다른 하나는 변경되지 않는다.
+마지막 함수는 아무것도 전달하지 않으면 문자열 변환을 기본 표현 함수로 사용하고 사용자 정의 함수를 전달하면 해당 함수를 사용해 문자열을 포맷한다.
+
+```python
+>>> str_final_price(10, 0.2, 0.5) 
+'6.0'
+>>> str_final_price(1000, 0.2, 0) 
+'1200.0'
+>>> str_final_price(1000, 0.2, 0.1, 
+'$ 1,080.00'
+```
+
+### 독립성과 관련된 품질 특성
+코드의 두 부분이 독립적이라는 것은 다른 부분에 영향을 주지 않고 변경할 수 있다는 것을 뜻한다.<br>
+이는 변경된 부분의 단위테스트가 나머지 단위테스트와도 독립적이라는 뜻이다.<br>
+<br>
+이러한 가정하에 **개발자는 두 개의 테스트가 통과하면 전체 회귀 테스트를 하지 않고도 애플리케이션에 문제가 없다고 어느 정도 확신**할 수 있다.
+
+## 코드 구조
+코드를 구조화 하는 방법은 작업 효율성과 유지보수성에 영향을 미친다.<br>
+특히 여러 정의(클래스, 함수, 상수)가 들어있는 큰 파일을 만드는 것은 좋지 않다.<br>
+<br> 
+극단적으로 하나의 파일에 하나의 정의만 유지하라는 것은 아니지만(실제로 자바는 클래스 단위로 극단적으로 정리한다), 좋은 코드라면 유사한 컴포넌트끼리 정리하여 구조화해야 한다.
+
+~~모듈 분리와 파이썬 패키지 생성에 대한 자세한 내용은 10 장 "클린 아키텍처" Erin님이 멋지게 다루어주실 예정 ^^.
+
