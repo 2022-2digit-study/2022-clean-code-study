@@ -1242,7 +1242,7 @@ class ConcreteModuleB23(BaseModule2, BaseModule3):
 ['ConcreteModuleA12', 'BaseModule1 ', 'BaseModule2', 'BaseModule', 'object']
 ```
 
-### 믹스인
+### 믹스인(Mixin)
 코드를 재사용하기 위해 일반적인 행동을 캡슐화 해놓은 기본클래스, <br>
 일반적으로 믹스인 클래스는 그 자체로는 유용하지 않으며 대부분이 클래스에 정의된 메서드나 속성에 의존하기 때문에 이 클래스만 확장해서는 확실히 동작하지 않는다.
 
@@ -1277,13 +1277,13 @@ class Tokenizer(UpperiterableMixin, BaseTokenizer):
 
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/59782504/170260268-b7e9b9d8-838b-4496-ac96-fb5fdd648945.png">
 
-실제 메서드의 흐름은 MRO알고리즘의 흐름을 따르기 때문에 아래의 사진과 같이 Tokenizer ► UpperIterableMixin ► BaseTokenizer의 서순을 따른다는 것이다.
+실제 메서드의 흐름은 MRO알고리즘의 흐름을 따르기 때문에 아래의 사진과 같이 `Tokenizer` ► `UpperIterableMixin` ► `BaseTokenizer의` 서순을 따른다는 것이다.
 
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/59782504/170260408-9aece54b-4869-496d-9dc2-4f8c6e199258.png">
 
 
 믹스인은 이처럼 새로운 코드 없이 상속만으로 새로운 기능을 구현하는 좋은 방법론이다.
-> 만약 python이 컴파일 언어였다면, UpperlterableMixin클래스가 호출하는 super()이 명확하지 않기 때문에 컴파일 단계에서 오류를 호출할 것이다. ~~오늘도 어김없이 놀라운 파이썬이다.~~
+> 만약 python이 컴파일 언어였다면, `UpperlterableMixin`클래스가 호출하는 `super()`이 명확하지 않기 때문에 컴파일 단계에서 오류를 호출할 것이다. ~~오늘도 어김없이 놀라운 파이썬이다.~~
 
 ## 함수와 인자
 > 앞서 파라미터에 가변인자를 넣으면 안된다는 내용(2장에서 다루었음)과 가변인자를 매개변수로 전달하는 내용에 대한 부분이 있으나, 이미 다룬 내용이며, 상식적인 수준이라 제외하였음.
@@ -1422,7 +1422,7 @@ def sell(employee):
 ####  2. 가변인자
 > 이전 파트에서 다루었기 때문에 다시 다루진 않는다. 다만, 가변인자는 만능의 해결책은 아니다. 매우 동적이어서 유지보수하기가 어렵기 때문이다. 해당 값이 어떤 파라미터인지 찾아서 이를 분기하고 있다면, 함수를 분리하라는 신호일 수 있다.
 
-```
+```python
 def purchase(*arg)
 	car_sell(arg[0:3]) 
 	...
@@ -1450,7 +1450,7 @@ def show_price(price: float) -> str:
 def str_final_price(base_price: float, tax: float, discount: float , fmt_function=str) -> str: 
 	return fmt_function(calculate_price(base_price, tax, discount))
 ```
-위쪽 두개의 함수는 독립성을 갖는다. 하나를 변경해도 다른 하나는 변경되지 않는다.
+위쪽 두 개의 함수는 독립성을 갖는다. 하나를 변경해도 다른 하나는 변경되지 않는다.
 마지막 함수는 아무것도 전달하지 않으면 문자열 변환을 기본 표현 함수로 사용하고 사용자 정의 함수를 전달하면 해당 함수를 사용해 문자열을 포맷한다.
 
 ```python
@@ -1458,13 +1458,13 @@ def str_final_price(base_price: float, tax: float, discount: float , fmt_functio
 '6.0'
 >>> str_final_price(1000, 0.2, 0) 
 '1200.0'
->>> str_final_price(1000, 0.2, 0.1, 
+>>> str_final_price(1000, 0.2, 0.1) 
 '$ 1,080.00'
 ```
 
 ### 독립성과 관련된 품질 특성
 코드의 두 부분이 독립적이라는 것은 다른 부분에 영향을 주지 않고 변경할 수 있다는 것을 뜻한다.<br>
-이는 변경된 부분의 단위테스트가 나머지 단위테스트와도 독립적이라는 뜻이다.<br>
+이는 변경된 부분의 단위테스트가 나머지 단위 테스트와도 독립적이라는 뜻이다.<br>
 <br>
 이러한 가정하에 **개발자는 두 개의 테스트가 통과하면 전체 회귀 테스트를 하지 않고도 애플리케이션에 문제가 없다고 어느 정도 확신**할 수 있다.
 
@@ -1474,5 +1474,5 @@ def str_final_price(base_price: float, tax: float, discount: float , fmt_functio
 <br> 
 극단적으로 하나의 파일에 하나의 정의만 유지하라는 것은 아니지만(실제로 자바는 클래스 단위로 극단적으로 정리한다), 좋은 코드라면 유사한 컴포넌트끼리 정리하여 구조화해야 한다.
 
-~~모듈 분리와 파이썬 패키지 생성에 대한 자세한 내용은 10 장 "클린 아키텍처" Erin님이 멋지게 다루어주실 예정 ^^.
+~~모듈 분리와 파이썬 패키지 생성에 대한 자세한 내용은 10 장 "클린 아키텍처" Erin님이 멋지게 다루어주실 예정 ^^.~~
 
