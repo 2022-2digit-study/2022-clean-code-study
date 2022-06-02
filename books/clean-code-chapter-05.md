@@ -6,6 +6,10 @@
 <br>
 `classmethod`나 `staticmethod`같은 함수가 원래 메서드의 정의를 변형하는데 사용되고 있었기 때문에 고안된 수단인데 이런 방법은 추가 코드가 필요하고 함수의 원래 정의를 수정해야만 했다.
 
+### 데코레이터는 고차함수
+크게 보면 데코레이터는 함수를 파라미터로 받아서 함수를 반환하는 함수이다. 이런 함수를 고차함수라고 부른다. <br>
+실제로 데코레이터 본문에 정의된 함수가 호출된다. 아래의 예를 보자<br>
+
 ### 데코레이터 적용 전
 
 ```python
@@ -200,3 +204,157 @@ class LoginEvent:
     timestamp: datetime
 ```
 
+## 파라미터를 갖는 데코레이터를 구현하는 방법
+
+### 재시도 데코레이터(`@retry`)에 인스턴스마다 재시도 횟수를 지정하고 싶은 경우
+
+#### 1. 간접 참조
+> 새로운 레벨의 중첩 함수를 만들어 데코레이터의 모든 것을 한단계 더 깊게 만드는 방식
+
+retry 데코레이터의 인자로 파라미터를 넣은 형태가 된다. `@retry(arg1 , arg2, ...)`<br>
+<br>
+이는 의미상 다음과 같다.<br>
+`<original_function> = retry(arg1 , arg2, .... ) (<original_function>)`
+
+#### 데코레이터 구현
+
+```python
+RETRIES_ LIMIT = 3
+def with_retry(retries_ limit=RETRIES_ LIMIT, allowed_exceptions=None):
+    allowed_exceptions = allowed_exceptions or (ControlledException, )
+    def retry(operat ion):
+        @wraps(operation)
+        def wrapped(*args, **kwargs):
+            last_raised = None
+            for _ in range(retries_limit) :
+                try:
+                    return operation(*args, **kwargs)
+                except allowed_exceptions as e:
+                    logger.info("retrying %s due to %s ", operation, e)
+                    last_raised = e
+            raise last_ raised
+            
+        return wrapped
+        
+    return retry
+
+```
+
+#### 데코레이터 호출
+
+```python
+# decorator_parameterized_1.py
+@with_retry()
+def run_operation(task):
+    return task.run()
+
+@with_retry(retries_limit=5)
+def run_with_custom_retries_limit(task):
+    return task.run()
+    
+@with_retry(allowed_exceptions=(AttributeError,))
+def run_with_custom_exceptions(task):
+    return task.run()
+
+@with_retry(retries_limit=4, allowed_exceptions=(ZeroDivisionError, AttributeError)
+def run_with_custom_parameters(task):
+    return task.run()
+```
+
+#### 2. 데코레이터를 위한 클래스를 만들기
+> 일반적으로 가독성이 더 좋음 _(세 단계이상 중첩된 클로저 함수보다 객체가 더 이해하기 쉽기 때문)_
+
+```python
+class WithRetry:
+    def __init__(self, retries_limit = RETRIES_LIMIT, allowed_exceptions = None) :
+        self.retries_limit = retries_limit
+        self.allowed_exceptions = allowed_exceptions or (ControlledException,)
+    def __call__(self, operation):
+        @wraps(operation)
+        def wrapped(*args, **kwargs):
+            last_raised = None
+            
+            for _ in range(self.retries_limit) :
+                try:
+                    return operation(*args, **kwargs)
+                except self.allowed_exceptions as e:
+                    logger.info( "retrying %s due to %s", operation, e)
+                    last_raised = e
+        
+            raise last_raised
+        
+        return wrapped
+```
+
+#### Flow
+
+1. `@WithRetry` 데코레이터 부착
+```python
+@WithRetry(retries_limit=5)
+def run_with_custom_retries_limit(task):
+    return task.run()
+```
+2. `__init__()` 메서드에 파라미터 전달 ▶ `WithRetry(5)(run_with_custom_retries_limit)` 
+3. `__call__()` 매직 메서드에서 데코레이터 로직 실행 ▶ `wrapped(task) => operation(task)`
+4. `operation(task)` 호출 ▶ `run_with_custom_retries_limit(task) => task.run()`
+
+## 데코레이터의 좋은 구현 예
+1. 파라미터 변환
+> 3번 파라미터 유효성 검사와 함께 DbC원칙에 따라 사전조건 또는 사후조건을 강제할 수 있다.
+2. 코드 추적
+&nbsp;&nbsp;&nbsp;&nbsp;3.1 함수 경로 추적(stack trace)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3.2 함수 지표 모니터링(CPU 사용률, 메모리 사용량)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3.3 함수 실행시간 측정<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3.4 함수 호출 시점 및 파라미터 로깅<br>
+3. 파라미터 유효성 검사
+4. 재시도 로직 구현
+5. 일부 반복 작업을 데코레이터로 이동하여 클래스 단순화
+
+
+## 흔한 실수
+1. 래핑된 객체를 유지하기
+
+```python
+def trace_decorator(function) :
+    def wrapped(*args, **kwargs):
+        logger.info(" %s 실행', function. __ qualname _ )
+        return function( *args, **kwargs)
+    return wrapped
+    
+@trace_decorator
+def process_account(account_id):
+    """id 별 계정 처리"""
+    logger.info("%s 계정 처리", account_id)
+```
+
+다음과 같은 데코레이터를 적용한 함수 `process_account()` 있다. 함수의 정보를 위해 `help()` 메서드를 써보자.
+```python
+>>> help(process_account)
+Help on function wrapped in module decorator_wraps_ 1:
+
+wrapped(*args, **kwargs)
+```
+난 `process_account()`메서드의 정보를 보고 싶었는데, 데코레이터에 선언한 `wrapped()`메서드의 정보가 나왔다.
+이는 보안적으로도 좋지 않으며, 적절한 시기에 함수의 문서를 볼 수 없게 만든다.
+
+말이 데코레이터이지 `wrapped()`로 재정의 한것과 마찬가지이기 때문에 발생한 현상이며, 이는 `@wraps()`메서드를 통해 해결할 수 있다.
+```python
+def trace_decorator(function):
+    @wraps(function)
+    def wrapped(*args, **kwargs):
+        logger . info( "running %s " , function . __ qualname_ 一)
+        return function(*args, **kwargs)
+    return wrapped
+```
+
+```python
+>>> help(process_account)
+
+Help on function process_account in module decorator_wraps_2:
+
+process_account(account_id)
+id 별 계정 처리
+
+>>> process_account.__qualname__
+'process_ account'
+```
