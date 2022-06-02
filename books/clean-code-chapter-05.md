@@ -2,13 +2,13 @@
 
 ## 데코레이터
 
-데코레이터는 오래 전 PEP-318에서 함수와 메서드의 기능을 쉽게 수정하기 위한 수단으로 소개되었다.<br>
+데코레이터는 오래 전 PEP-318에서 **함수와 메서드의 기능을 쉽게 수정하기 위한 수단으로 소개**되었다.<br>
 <br>
 `classmethod`나 `staticmethod`같은 함수가 원래 메서드의 정의를 변형하는데 사용되고 있었기 때문에 고안된 수단인데 이런 방법은 추가 코드가 필요하고 함수의 원래 정의를 수정해야만 했다.
 
 ### 데코레이터는 고차함수
 
-크게 보면 데코레이터는 함수를 파라미터로 받아서 함수를 반환하는 함수이다. 이런 함수를 고차함수라고 부른다. <br>
+크게 보면 데코레이터는 **함수를 파라미터로 받아서 함수를 반환하는 함수**이다. 이런 함수를 **고차함수**라고 부른다. <br>
 실제로 데코레이터 본문에 정의된 함수가 호출된다. 아래의 예를 보자<br>
 
 ### 데코레이터 적용 전
@@ -87,16 +87,16 @@ def run_operation(task):
 
 ## 클래스 데코레이터(Class Decorator)
 
-데코레이터 함수의 파리머터로 함수가 아닌 클래스를 받는 데코레이터
+데코레이터 함수의 파리미터로 함수가 아닌 **클래스를 받는 데코레이터**
 
 ### 주의점
 
 클래스 데코레이터가 복잡하고 가독성을 떨어뜨릴 수 있음.
-> 클래스에서 정의한 속성과 메서드를 데코레이터에서 완전히 다른 용도로 변경 가능하기 때문
+> 클래스에서 정의한 속성과 메서드를 **데코레이터에서 완전히 다른 용도로 변경 가능하기 때문**
 
 ### 장점
 
-- 코드 재사용과 DRY원칙의 모든 이점을 공유함.
+- 코드 재사용과 DRY(Don't Repeat Yourself)원칙의 모든 이점을 공유함.
 - 작고 간단한 클래스를 먼저 생성하고 추후 데코레이터로 기능을 보강할 수 있음.
 - 특정 클래스에 대해서는 유지보수 시 데코레이터를 사용해 기존 로직을 쉽게 변경 가능 _(메타 클래스를 사용하는 방법도 있으나 권장되진 않음)_
 
@@ -127,7 +127,7 @@ class LoginEvent:
         return self.SERIALIZER(self).serialize()
 ```
 
-로그인 이벤트에 직접 매핑할 클래스를 선언하고 민감한 개인정보인 password 필드를 숨기고, timestamp 필드를 포매팅하였다.<br>
+로그인 이벤트에 직접 매핑할 클래스를 선언하고 민감한 개인정보인 `password` 필드를 숨기고, `timestamp` 필드를 포매팅하였다.<br>
 처음에는 잘 작동할 지 모르나, 시간이 지나면서 시스템을 확장하게 된다면 개발자는 다음과 같은 문제를 마주해야 할 수 있다.
 
 1. 클래스가 점점 많아진다.
@@ -140,7 +140,7 @@ class LoginEvent:
 
 3. 표준화 문제
 
-> Serialize 메서드는 모든 이벤트 클래스에 있어야 한다. 믹스인을 사용해 분리할 수는 있으나, 상속을 제대로 사용했다고 볼 수 없다.
+> `serialize()` 메서드는 모든 이벤트 클래스에 있어야 한다. 믹스인을 사용해 분리할 수는 있으나, 상속을 제대로 사용했다고 볼 수 없다.
 
 ```python
 from datetime import datetime
@@ -192,7 +192,7 @@ class LoginEvent:
         self.timestamp = timestamp
 ```
 
-이 때 단순히 데이터 필드를 정의하는 클래스 LoginEvent는 파이썬 3.7 이상부터 정의된 dataclass 데코레이터를 통해 다음과 같이 단수화할 수 있다.
+이 때 단순히 데이터 필드를 정의하는 클래스 `LoginEvent`는 파이썬 3.7 이상부터 정의된 `dataclass` 데코레이터를 통해 다음과 같이 단순화할 수 있다.
 
 ```python
 from dataclasses import dataclass
@@ -215,7 +215,7 @@ class LoginEvent:
 
 > 새로운 레벨의 중첩 함수를 만들어 데코레이터의 모든 것을 한단계 더 깊게 만드는 방식
 
-retry 데코레이터의 인자로 파라미터를 넣은 형태가 된다. `@retry(arg1 , arg2, ...)`<br>
+`@retry` 데코레이터의 인자로 파라미터를 넣은 형태가 된다. `@retry(arg1 , arg2, ...)`<br>
 <br>
 이는 의미상 다음과 같다.<br>
 `<original_function> = retry(arg1 , arg2, .... ) (<original_function>)`
@@ -265,7 +265,7 @@ def run_with_custom_exceptions(task):
     return task.run()
 
 
-@with_retry(retries_limit=4, allowed_exceptions=(ZeroDivisionError, AttributeError)
+@with_retry(retries_limit=4, allowed_exceptions=(ZeroDivisionError, AttributeError))
 def run_with_custom_parameters(task):
     return task.run()
 ```
@@ -374,14 +374,14 @@ def trace_decorator(function):
 
 ```python
 
->> > help(process_account)
+>>> help(process_account)
 
 Help on function process_account in module decorator_wraps_2:
 
 process_account(account_id)
 'id 별 계정 처리'
 
->> > process_account.__qualname__
+>>> process_account.__qualname__
 'process_account'
 ```
 
@@ -390,7 +390,7 @@ process_account(account_id)
 ## 데코레이터 부작용 처리
 
 데코레이터 내부의 코드는 가장 안쪽에 정의된 함수에 해야 한다.
-> 그렇지 않으면 import과정에서 문제가 발생할 수 있다.
+> 그렇지 않으면 `import` 과정에서 문제가 발생할 수 있다.
 
 ```python
 import functools
@@ -420,7 +420,7 @@ def process_with_delay(callback, delay=0):
 실행을 직접 해보아도 의도한 결과대로 동작하는 듯 하다.<br>
 <br>
 위 함수는 얼핏보면 문제 없이 보이나 중대한 문제가 있다.
-해당 함수를 대화형 인터프리터에서 import 해보면,
+해당 함수를 대화형 인터프리터에서 `import` 해보면,
 ```python
 >>> from decorator_side_effects_1 import process_with_delay 
 INFO:<function process_with_delay at 0x...> 함수 실행
@@ -444,8 +444,8 @@ INFO:함수 <function process_with_delay at 0x〉의 실행시간: 17.01s
 process_with_delay = traced_function_wrong(process_with_delay)
 ```
 
-문제는 이 문구가 데코레이터를 import 하는 시점에 실행된다는 것이다.<br>
-따라서 start_time은 모듈을 처음 import 할 때의 시간이 되며, 연속적으로 호출하면 함수의 최초 시작 시점과 시간차를 계산해서 실행되는 것이다.<br>
+문제는 이 문구가 데코레이터를 `import` 하는 시점에 실행된다는 것이다.<br>
+따라서 `start_time`은 모듈을 처음 `import` 할 때의 시간이 되며, 연속적으로 호출하면 함수의 최초 시작 시점과 시간차를 계산해서 실행되는 것이다.<br>
 <br>
 다행히 이런 문제를 바로 잡는 것은 매우 쉽다. 위에 설명한 원칙에 따라 아래와 같이 래핑된 함수 내부로 코드를 이동시키면 된다.
 ```python
@@ -491,7 +491,7 @@ class UserlogoutEvent(UserEvent):
 만약 위에서 일부 이벤트만 사용하고 싶다면,<br> 
 기존과 같은 방식은 계층 구조에 가상의 클래스르 만들고 일부 파생 클래스에 대해서만 처리해야 할 것이다.<br>
 <br>
-그러나 부작용을 활용하면 위에서 선언한 일부 이벤트를 import 하는 것으로 EVENTS_REGISTRY에 데코레이터로 지정한 클래스로 채워지게 된다.
+그러나 부작용을 활용하면 위에서 선언한 일부 이벤트를 `import` 하는 것으로 `EVENTS_REGISTRY`에 데코레이터로 지정한 클래스로 채워지게 된다.
 
 ```python
 >>> from decorator_side_effects_2 import EVENTS_REGISTRY
@@ -502,7 +502,7 @@ class UserlogoutEvent(UserEvent):
 ```
 
 그러나 이 코드는 이해하기 어렵다.<br>
-EVENTS_REGISTRY는 런타임 중에 모듈을 임포트한 직후에야 최종 값을 가지므로 코드만 봐서는 어떤 값이 될지 쉽게 예측 하기 어렵기 때문이다.<br>
+`EVENTS_REGISTRY`는 런타임 중에 모듈을 임포트한 직후에야 최종 값을 가지므로 코드만 봐서는 어떤 값이 될지 쉽게 예측 하기 어렵기 때문이다.<br>
 <br>
 그러나 많은 웹 프레임워크나 널리 알려진 라이브러리들은 이 원리를 통해 객체를 노출하거나 활용하고 있다.
 
@@ -511,11 +511,11 @@ EVENTS_REGISTRY는 런타임 중에 모듈을 임포트한 직후에야 최종 �
 > 예를 들어 같은 데코레이터를 함수나 클래스, 메서드 또는 정적 메서드 등 여러 곳에 재사용하려는 경우이다.
 
 그러나 데코레이터는 다른 유형에 적용을 하려면 많은 상황에서 오류가 발생한다는 것을 알 수 있다.<br>
-일반적으로 *args와 **kwargs 서명을 시용하여 데코레이터를 정의하면 모든 경우예 사용할 수 있다.<br>
+일반적으로 `*args`와 `**kwargs` 서명을 시용하여 데코레이터를 정의하면 모든 경우예 사용할 수 있다.<br>
 <br>
 그러나 아래의 이유로 원래 함수의 서명과 비슷하게 데코레이터를 정의하는 것이 좋을 때가 있다.
 1. 원래의 함수와 모양아 비슷하기 때문에 읽기가 쉽다
-2. 파라미터를 받아서 뭔가를 하려면 *args와 **kwargs를 사용하는 것이 불편하다.
+2. 파라미터를 받아서 뭔가를 하려면 `*args`와 `**kwargs`를 사용하는 것이 불편하다.
 
 파라미터를 받아서 특정 객체를 생성하는 경우가 많을 경우 파라미터를 변환해주는 데코레이 터를 만들어 중복을 제거할 수 있다.
 
@@ -566,7 +566,7 @@ Traceback (most recent call last):
     ...
 TypeError: wrapped() takes 1 positional argument but 2 were given
 ```
-클래스 내부의 메서드의 경우 모든 메서드에 self라는 추가 변수가 있다.<br>
+클래스 내부의 메서드의 경우 모든 메서드에 `self`라는 추가 변수가 있다.<br>
 따라서 위 오류에서도 1개의 파라미터를 받는 것을 의도하였으나, 2개를 받았다고 경고하는 것이다.<br>
 
 #### 해결
@@ -623,6 +623,7 @@ def traced_function(function):
 이 함수는 문제점이 하나 있다. 바로 이전 줄에 말했던 부분이다.<br>
 <br>
 위 데코레이터는 아래와 같이 좀 더 구체적이고 제한적인 책임을 지닌 더 작은 데코레이터로 분류되어야 한다.
+
 ```python
 import functools
 import logging
@@ -649,6 +650,7 @@ def measure_time(function):
 또한 기본적으로 출력량이 많아지면, 미미하지만 함수의 수행속도에 영향을 미친다. <br>
 따라서 개발자는 최소한의 성능시간만 체크하고 싶을 수 있다.<br>
 <br>
+
 반대로 성능보다 로그를 중요시 봐야 할 수 있다.<br>
 보안적인 측면에서 취약점을 쉽게 발견하기 위해 중요한 함수에서는 성능보다는 로깅을 중요시할 수 있다.<br>
 <br>
@@ -660,13 +662,15 @@ def measure_time(function):
 3. 데코레이터 코드를 최소한으로 유지한다.
 
 ## 좋은 데코레이터가 갖추어야 할 특성
-1. 캡슐화와 관심사의 분리 
+1. **캡슐화와 관심사의 분리**
 > 좋은 데코레이터는 실제로 하는 일과 데코레이팅하는 일의 책임을 명확히 구분해야 한다.
 > 어설프게 추상화 하면 안 된다. 
 > 즉, 데코레이터의 클라이언트는 내부에서 어떻게 구현했는지 전혀 알 수 없는 블랙박스 모드로 동작해야 한다.
-2. 독립성
+
+2. **독립성**
 > 데코레이터가 하는 일은 독립적이어야 하며 데코레이팅되는 객체와 최대한 분리되어야 한다.
-3. 재사용성 
+
+3. **재사용성**
 > 데코레이터는 하나의 함수 인스턴스에만 적용되는 것이 아니라 여러 유형에 적용 가능한 형태가 바람직하다. 
-> 왜냐하면 하나의 함수에만 적용된다면 데코레이터가 아니라 함수로 대신할 수도 있가 때문이다.
+> 왜냐하면 하나의 함수에만 적용된다면 데코레이터가 아니라 함수로 대신할 수도 있기 때문이다.
 > 충분히 범용적이어야 한다.
