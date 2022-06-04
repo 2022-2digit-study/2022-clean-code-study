@@ -1,4 +1,4 @@
-# [Chatper .5] 데코레이터를 사용한 코드 개선
+# [Chapter .5] 데코레이터를 사용한 코드 개선
 
 ## 데코레이터
 
@@ -31,7 +31,7 @@ def original(...):
 
 정리하면 즉, 데코레이터는 데코레이터 이후에 나오는 것을 데코레이터의 첫 번째 파라미터로 하고 데코 레이터의 결과 값을 반환하게 하는 문법적 설탕*(syntax sugar)일 뿐이다.<br>
 <br>
-위의 예제에서 `modifier`는 파이썬 용어로 데코레이터라 하고, `original`을 데코레이팅된 decorated) 함수 또는 래핑된(wrapped) 객체라 한다.<br>
+위의 예제에서 `modifier`는 파이썬 용어로 데코레이터라 하고, `original`을 데코레이팅된 (decorated) 함수 또는 래핑된(wrapped) 객체라 한다.<br>
 <br>
 사실 함수 뿐 아니라 메서드, 클래스, 제너레이터 등에도 적용이 가능하다.
 
@@ -77,7 +77,6 @@ def retry(operation):
 ▼ 데코레이터 사용
 
 ```python
-
 @retry
 def run_operation(task):
     """실행 중 예외가 발생할 것으로 예상되는 특정 작업율 실행 """
@@ -316,11 +315,11 @@ def run_with_custom_retries_limit(task):
 
 > 3번 파라미터 유효성 검사와 함께 DbC(Design by Contract)원칙에 따라 사전조건 또는 사후조건을 강제할 수 있다.
 
-2. 코드 추적
-   &nbsp;&nbsp;&nbsp;&nbsp;3.1 함수 경로 추적(stack trace)<br>
-   &nbsp;&nbsp;&nbsp;&nbsp;3.2 함수 지표 모니터링(CPU 사용률, 메모리 사용량)<br>
-   &nbsp;&nbsp;&nbsp;&nbsp;3.3 함수 실행시간 측정<br>
-   &nbsp;&nbsp;&nbsp;&nbsp;3.4 함수 호출 시점 및 파라미터 로깅<br>
+2. 코드 추적<br>
+   &nbsp;&nbsp;&nbsp;&nbsp;2.1 함수 경로 추적(stack trace)<br>
+   &nbsp;&nbsp;&nbsp;&nbsp;2.2 함수 지표 모니터링(CPU 사용률, 메모리 사용량)<br>
+   &nbsp;&nbsp;&nbsp;&nbsp;2.3 함수 실행시간 측정<br>
+   &nbsp;&nbsp;&nbsp;&nbsp;2.4 함수 호출 시점 및 파라미터 로깅<br>
 3. 파라미터 유효성 검사
 4. 재시도 로직 구현
 5. 일부 반복 작업을 데코레이터로 이동하여 클래스 단순화
@@ -332,7 +331,7 @@ def run_with_custom_retries_limit(task):
 ```python
 def trace_decorator(function):
     def wrapped(*args, **kwargs):
-        logger.info("%s 실행:", function. __qualname__)
+        logger.info("%s 실행:", function.__qualname__)
         return function(*args, **kwargs)
 
     return wrapped
@@ -483,7 +482,7 @@ class UserLoginEvent(UserEvent):
     """사용자가 시스템에 겁근했을 때 발생하는 이벤트"""
     
 @register_event
-class UserlogoutEvent(UserEvent):
+class UserLogoutEvent(UserEvent):
     """사용자가 시스템에서 나갈 때 발생하는 이벤트"""
 ```
 
@@ -496,8 +495,8 @@ class UserlogoutEvent(UserEvent):
 >>> from decorator_side_effects_2 import EVENTS_REGISTRY
 >>> EVENTS_REGISTRY
 
-{'UserloginEvent': decorator_side_effects_2.UserLoginEvent,
-'UserlogoutEvent': decorator_side_effects_2.UserLogoutEvent}
+{'UserLoginEvent': decorator_side_effects_2.UserLoginEvent,
+'UserLogoutEvent': decorator_side_effects_2.UserLogoutEvent}
 ```
 
 그러나 이 코드는 이해하기 어렵다.<br>
