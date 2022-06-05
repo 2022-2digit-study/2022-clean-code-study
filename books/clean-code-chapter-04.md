@@ -118,7 +118,7 @@ class Event:
         self.raw_data = raw_data
        
     @staticmethod
-    def metts_condition(event_data: dict):
+    def meets_condition(event_data: dict):
         return False
     
 class UnknownEvent(Event):
