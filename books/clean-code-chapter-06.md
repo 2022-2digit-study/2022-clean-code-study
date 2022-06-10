@@ -1,10 +1,10 @@
-# f[Chapter .6] 디스크립터로 더 멋진 객체 만들기
+# [Chapter .6] 디스크립터로 더 멋진 객체 만들기
 
 디스크립터(Descriptor)는 파이썬의 고급 기능으로 다른 언어에서는 생소한 개념이다.    
 
 [파이썬 3.10.5 의 공식 문서](https://docs.python.org/ko/3/howto/descriptor.html)에 따르면 디스크립터는 **`__get__()`, `__set__()` 또는 `__delete__()`를 정의하는 모든 객체**를 부르는 이름이다. (선택적으로 `__set_name__()` 메서드를 가지기도 함)
 
-즉, 이 세 가지 매직 메서드가 어트리뷰트에 정의되면 그것을 디스크립터라고 한다.  
+즉, 이 세 가지 매직 메서드가 어트리뷰트에 정의되면 그것을 **디스크립터**라고 한다.  
 
 디스크립터를 구현하는 이유는 클래스 변수에 저장된 객체가 어트리뷰트 조회 중 발생하는 일을 제어할 수 있도록 하는 것이다.  
 
@@ -16,7 +16,7 @@
 
 `클라이언트 클래스`는 일반적인 추상화 객체이며 `디스크립터 클래스`는 디스크립터 로직 구현체이다.  
 
-`디스크립터`는 디스트립터 프로토콜을 구현한 클래스의 인스턴스로, 이 클래스는 앞서 살펴본 매직 메서드 중 최소 한 개 이상을 포함해야한다.
+`디스크립터`는 디스크립터 프로토콜을 구현한 클래스의 인스턴스로, 이 클래스는 앞서 살펴본 매직 메서드 중 최소 한 개 이상을 포함해야한다.
 
 이와 관련하여 다음과 같은 네이밍 컨벤션을 사용한다.  
 
@@ -53,7 +53,7 @@ class Client:
     attribute = Attribute()
     
 >>> Client().attribute
-
+<__main__.Attribute at 0x7fe5846e6730>
 >>> Client().attribute.value
 42
 ```
@@ -75,8 +75,9 @@ class ClientClass:
     
 >>> client = ClientClass()
 >>> client.descriptor
-
+INFO:Call: DescriptorClass.__get__(<ClientClass object at 0x7fe5846d6f10>, <class 'ClientClass'>)
 >>> client.descriptor is client
+INFO:Call: DescriptorClass.__get__(<ClientClass object at 0x7fe5846d6f10>, <class 'ClientClass'>)
 True
 ```
 
@@ -92,7 +93,7 @@ True
 
 여기서 self는 디스크립터 객체 자신을 의미한다.  
 
-그렇다면 디스크립터 프로토콜 메서드 `__get__`, `__set__`, `__delete__`에 대해 알아보자.  
+그렇다면 디스크립터 프로토콜 메서드 `__get__`, `__set__`, `__delete__`, `__set_name__`에 대해 알아보자.  
 
 
 
@@ -118,10 +119,10 @@ class ClientClass:
     
 # 1. 클래스에서 호출
 >>> ClientClass.descriptor
-
+'DescriptorClass.ClientClass'
 # 2. 객체에서 호출
 >>> ClientClass().descriptor
-
+'value for <__main__.ClientClass object at 0x7fe5846e6e80>'
 ```
 
 > 클래스에서 호출할 경우 네임스페이스와 함께 클래스 이름을 출력하지만  
@@ -180,9 +181,13 @@ class ClientClass:
 >>> client.descriptor
 42
 >>> client.descriptor = -42
-
+ValueError                                Traceback (most recent call last)
+...
+ValueError: -42 는 0보다 작음
 >>> client.descriptor = "invalid value"
-
+ValueError                                Traceback (most recent call last)
+...
+ValueError: 'invalid value' 는 숫자가 아님
 ```
 
 > 이 예에서 `__set__()` 메서드가 @property.setter가 하던 역할을 대신하고 있다.  
@@ -191,7 +196,7 @@ class ClientClass:
 
 #### `__delete__(self, instance)`
 
-`__delete__`의 파라미터 중 self는 discriptor 속성을 나타내며 instance는 client를 나타낸다.   
+`__delete__`의 파라미터 중 self는 descriptor 속성을 나타내며 instance는 client를 나타낸다.   
 
 `__delete__` 메서드를 통해 관리자가 권한이 없는 객체에 대해 속성을 제거하지 못하도록 하는 예시를 살펴보자.  
 
@@ -245,7 +250,7 @@ ValueError: email를 None으로 설정할 수 없음
 ValueError: user 사용자는 admin 권한이 없음
 ```
 
-> User 클래스는 username과 emial파라미터를 필수로 받으며  
+> User 클래스는 username과 email파라미터를 필수로 받으며  
 >
 > email 속성을 지우면 User 클래스에서 정의한 인터페이스와 맞지 않는 상태가 된다.  
 >
@@ -313,7 +318,7 @@ class ClientClass:
 
 
 
-### 비데이터(non-data) 디스크립터
+### 비데이터 디스크립터
 
 예제를 통해 특징을 살펴보자.  
 
@@ -489,7 +494,7 @@ class Traveller:
             
     @property
     def cities_visited(self):
-        return self._cities_visitedzj
+        return self._cities_visited
 ```
 
 > 클래스는 여행자이며 현재 어느 도시에 있는지를 속성으로 가진다. 또한 방문한 모든 도시를 추적한다.
@@ -499,7 +504,7 @@ class Traveller:
 >>> alice.current_city = "Paris"
 >>> alice.current_city = "Brussels"
 >>> alice.current_city = "Amsterdam"
->>> alice.cities_fvisited
+>>> alice.cities_visited
 ['Barcelona', 'Paris', 'Brussels', 'Amsterdam']
 ```
 
@@ -511,7 +516,11 @@ class Traveller:
 
 그렇다면 디스크립터를 통한 이상적인 구현을 확인해보자.  
 
-사실 예제에 명시되지 않은 요구사항까지 구현에 포함하여 필요이상의 기능을 제공하지만~~(그냥 디스크립터 짱짱맨을 외치기 위하여)~~ 실전에서의 디스크립터 사용방법을 묘사하기 위한 구현임을 알아두자.  
+사실 예제에 명시되지 않은 요구사항까지 구현에 포함하여 필요이상의 기능을 제공하지만  
+
+~~(그냥 디스크립터 짱짱맨을 외치기 위하여)~~   
+
+실전에서의 디스크립터 사용방법을 묘사하기 위한 구현임을 알아두자.  
 
 ```python
 class HistoryTracedAttribute:
@@ -570,7 +579,7 @@ class Traveller:
 - 클라이언트의 코드가 상당히 간단해진다.~~(디스크립터 코드는 다소 복잡하지만..)~~
 - 어떤 비지니스 로직도 포함되어있지 않기 때문에 완전 다른 클래스에서도 사용이 가능하다.
 
-디스크립터는 비지니스 로직의 구현보다는 라이브러리, 프레임워크 또는 내부 API를 정의하는데 적합하다.  
+(디스크립터는 비지니스 로직의 구현보다는 라이브러리, 프레임워크 또는 내부 API를 정의하는데 적합하다.)  
 
 ~~(물론 실질적인 코드 반복의 증거가 없거나 복잡성의 대가가 명확하지 않다면 굳이 디스크립터를 사용할 필요는 없다고 한다)~~
 
@@ -592,7 +601,7 @@ instance.__dict__["descriptor"] = value
 setattr(instance, "descriptor", value)
 ```
 
-이 방법이 불가능한  이유는 디스크립터의 속성에 무언가를 할당하려고하면 `__set__` 메서드가 호출되기 때문이다.   
+이 방법이 불가능한  이유는 디스크립터의 속성에 무언가를 할당하려고 하면 `__set__` 메서드가 호출되기 때문이다.   
 
 `setattr()`이 `__set__` 메서드를 호출하고 `__set__`메서드가 다시 ` setattr()`을 호출하면서 무한루프에 빠지게 된다.  
 
@@ -700,7 +709,7 @@ class DescriptorClass:
 
 > 단, 이렇게 될 경우 인스턴스 객체는 더이상 속성을 보유하지 않으며 대신 디스크립터가 속성을 보유한다.  
 >
-> (다소 논란의 여지가 있으며 개념적 관점에서 왖넞히 정확하지 않을 수 있다.)
+> (다소 논란의 여지가 있으며 개념적 관점에서 완전히 정확하지 않을 수 있다.)
 
 
 
@@ -724,7 +733,7 @@ class DescriptorClass:
 
 #### 클래스 데코레이터 피하기
 
-"데코레이터를 사용해 코드개선하기" 에서 이벤트 객체의 직렬화 방식을 결정하기 위해 두 개의 클래스 데코레이를 사용하여 구현했었다.  
+"데코레이터를 사용해 코드개선하기" 에서 이벤트 객체의 직렬화 방식을 결정하기 위해 아래와 같이 두 개의 클래스 데코레이를 사용하여 구현했었다.  
 
 ```python
 @Serializaion(
@@ -830,7 +839,7 @@ class MyClass:
 이런 메서드는 실제로 다음과 같이 정의하는 것과 같다.
 
 ```python
-Class MyClass: pass
+class MyClass: pass
 
 def method(myclass_instance, ...):
     myclass_instance.x = 1
@@ -856,13 +865,13 @@ method(MyClass())
 
 ### 슬롯
 
-파이썬의 `__slots__` 매직 메서드를 사용하면 클래스가 기대하는 특정 속상만을 정의하며 , 정의되지 않은 동적 속성에 대해 AttributeError를 발생시킨다.  
+파이썬의 `__slots__` 매직 메서드를 사용하면 클래스가 기대하는 특정 속성만을 정의하며 , 정의되지 않은 동적 속성에 대해 AttributeError를 발생시킨다.  
 
 한 마디로 클래스가 정적이 되고 더이상 `__dict__`속성을(=동적 속성을) 갖지 않게 된다.  
 
 이렇게 객체의 사전이 없어지게 될 때, 속성을 불러오는 방법으로 디스크립터를 택하고 있다.  
 
-슬롯에 정의된 이름마다 디스크립터를 만들어 값을 저장한다.  
+슬롯에 정의된 이름마다 디스크립터를 만들어 값을 저장하는 방식으로 말이다.  
 
 슬롯을 이용한 객체는 고정된 필드 값만 저장하면 되므로 메모리를 덜 사용한다는 장점이 있지만,  
 
@@ -874,7 +883,7 @@ method(MyClass())
 
 사용자 정의 데코레이터를 개발하면서 발생하는 문제를 디스크립터로 해결할 수 있다.  
 
-데코레이터를 디스크립터로 만들기 위한 일반적인 방법`__get__ `메서드를 구현하고  
+데코레이터를 디스크립터로 만들기 위한 일반적인 방법은 `__get__ `메서드를 구현하고  
 
 `types.MethodType`을 사용해 데코레이터 자체를 객체에 바인딩된 메서드로 만드는 것이다.  
 
