@@ -229,7 +229,7 @@ class User:
     
     def __init__(self, username: str, email: str. permission_list: list = None) -> None:
         self.username = username
-        self.emial = email
+        self.email = email
         self.permissions = permission_list or []
         
     def __str__(self):
@@ -408,8 +408,10 @@ class DataDescriptor:
         instance.__dict__["descriptor"] = value
        
 class ClientClass:
-    descriptor = DataDescriptor()데이터 디스크립터를 만들어 호출하면 다음과 같은 값을 얻을 수 있다.  
+    descriptor = DataDescriptor()
 ```
+
+데이터 디스크립터를 만들어 호출하면 다음과 같은 값을 얻을 수 있다.  
 
 ````python
 >>> client = ClientClass()
