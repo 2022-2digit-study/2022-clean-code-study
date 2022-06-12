@@ -548,7 +548,9 @@ INFO:...:closing connection to database 'testdb'
 ```
 
 ####  `throw(ex_type[, ex_value[, ex_traceback]])`
-해당 메서드는 현제 제네레이터가 중단된 위치에서 예외를 던진다. 제네레이터가 예외를 처리했으면 `except`절에 있는 코드가 호출되며, 예외를 처리하지 않았다면 호출자에게 에러가 전파된다.
+해당 메서드는 현제 제네레이터가 중단된 위치에서 예외를 던진다. 
+
+제네레이터가 예외를 처리했으면 `except`절에 있는 코드가 호출되며, 예외를 처리하지 않았다면 호출자에게 에러가 전파된다.
 
 ```python
 class CustomException(Exception): 
@@ -893,13 +895,13 @@ INFO: second 제네레이터 두 번째 제네레이터를 향한 예외 던지�
 ```python
 result = yield from iterable_or_awaitable()
 ```
-iterable_or_awaitable이 반환하는 것이 명확하지 않다. 
+`iterable_or_awaitable`이 반환하는 것이 명확하지 않다. 
 단순히 문자열과 같은 `iterable`이어도 문법상 문제가 없다. 
 
 또는 실제 코루틴일 수도 있다. 이러한 유형의 실수는 나중에 큰 비용을 초래하기 마련이다.
 
 ### 코루틴을 위해서 추가된 구문
-실제로 파이썬 3.5 이전에 코루틴은 @coroutine 데코레이터가 적용된 제네레이터일 뿐이었으며 yield from 구문을 사용해 호출했다.
+실제로 파이썬 3.5 이전에 코루틴은 `@coroutine` 데코레이터가 적용된 제네레이터일 뿐이었으며 `yield from` 구문을 사용해 호출했다.
 
 그러나 위에서 알아보았듯, `yield from` 구문이 코루틴에서도, 이터러블에서도 사용되는 것이 문제가 될 수 있다.
 
