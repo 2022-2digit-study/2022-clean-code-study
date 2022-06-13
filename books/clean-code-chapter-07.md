@@ -165,7 +165,7 @@ def load_purchases(filename):
 	
 ```python
 class NumberSequence:
-    def __ init__ (self, start=0):
+    def __init__(self, start=0):
     self .current = start
 	
     def next(self):
