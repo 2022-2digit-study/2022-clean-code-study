@@ -169,7 +169,7 @@ class NumberSequence:
     self .current = start
 	
     def next(self):
-        current = selfq.current 
+        current = self.current 
         self.current += 1 
         return current
 ```
