@@ -108,7 +108,7 @@ class MergeRequestStatus(Enum):
 class MregeRequest:
     def __init__(self):
         self._context = {
-        	"upvotes": set(),
+            "upvotes": set(),
             "downvotes": set(),
         }
         self._status = MergeRequestStatus.OPEN
@@ -117,7 +117,7 @@ class MregeRequest:
         self._status = MergeRequestStatus.CLOSED
             
     @property
-	def satatus(self)::
+    def status(self)::
         if self._context["downvotes"]:
             return MergeRequestStatus.REJECTED
         elif len(self._context["upvotes"]) >= 2:
@@ -233,12 +233,12 @@ class AcceptanceThreshold:
             return MergeRequestStatus.REJECTED
         elif len(self._context["upvotes"]) >= 2:
             return MergeRequestStatus.APPROVED
-        	return MergeRequestStatus.PENDING
+        return MergeRequestStatus.PENDING
 
 class MregeRequest:
-	...           
+    ...           
     @property
-	def satatus(self)::
+    def status(self)::
         if self._status == MergeRequestStatus.CLOSED:
             return self._status
         
@@ -251,7 +251,7 @@ class MregeRequest:
 class TestAcceptanceThreshold(unittest.TestCase):
     def setUp(self):
         self.ficture_data = (
-        	(
+            (
                 {"downvotes": set(), "upvotes": set()},
                 MergeRequestStatus.PENDING
             ),
@@ -295,7 +295,7 @@ def  test_simple_rejected():
     assert merge_request.status = MergeRequestStatus.REJECTED
     
 def test_just_created_is_pending():
-	assert MergeRequest().status == MergeRequestSataus.PENDING
+    assert MergeRequest().status == MergeRequestSataus.PENDING
     
 def test_pending_awaiting_review():
     merge_request = MergeRequest()
@@ -366,7 +366,7 @@ def rejected_mr():
     
     merge_request.downvote("dev1")
     merge_request.upvote("dev2")
-	merge_request.upvote("dev3")
+    merge_request.upvote("dev3")
     merge_request.downvote("dev4")
     
     return merge_request
@@ -403,7 +403,7 @@ def test_rejected_to_approved(rejected_mr):
 
 이를 통해 커버되지 않은 코드를 확인하고 추가로 단위 테스트를 작성할 수 있다. 
 
-즉, 코드 커버리지는 **휴먼 에러를 최대한 방지할 수 있도록 도와줄 수 있다. **
+즉, 코드 커버리지는 **휴먼 에러를 최대한 방지할 수 있도록 도와줄 수 있다.**
 
 코드 커버리지가 높은 것은 좋은 것이지만, 클린 코드를 위한 조건으로는 부족하다. (이것이 맹점이라 지적하고 있음)  
 
@@ -413,7 +413,7 @@ def test_rejected_to_approved(rejected_mr):
 
   
 
-### 모의(mock) 객체
+### 목(mock) 객체
 
 모의 객체는 원하지 않는 부작용으로부터 테스트 코드를 보호하는 좋은 방법이다.  
 
@@ -427,9 +427,9 @@ def test_rejected_to_approved(rejected_mr):
 
 [^테스트 더블]: 테스트 스위트에서 실제 코드를 대신해 실제인 것처럼 동작하는 코드
 
-이 중에서 모의 객체는 가장 일반적인 유형의 객체이므로 모의 객체를 살펴보자.  
+이 중에서 목 객체는 가장 일반적인 유형의 객체이므로 모의 객체를 살펴보자.  
 
-`모의(mock) 객체`는 호출 시 응답해야하는 값이나 행동을 특정할 수 있으며  
+`목(mock) 객체`는 호출 시 응답해야하는 값이나 행동을 특정할 수 있으며  
 
 Mock 객체는 내부에 호출 방법을 기록하고 나중에 이 정보를 사용하여 동작을 검증한다.  
 
