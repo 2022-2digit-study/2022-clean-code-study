@@ -55,7 +55,7 @@
 
 단위 테스트에서 발견하기 어려운 환경버그 등을 찾을 수 있다.  
 
- #### 인수 테스트(acceptance  test)
+#### 인수 테스트(acceptance  test)
 
 유스케이스(use case)를 활용하여 사용자의 관점에서 시스템의 유효성을 검사하는 테스트이다.  
 
@@ -67,7 +67,7 @@
 
   
 
-이 두 가지 테스트가 이 책의 범위를 벗어나는 이유는 단위테스트의 중요한 특성인 `속도`를 잃게 되기 때문이다.  
+이 두 가지 테스트가 이 책의 범위를 벗어나는 이유는 단위 테스트의 중요한 특성인 `속도`를 잃게 되기 때문이다.  
 
 개발자는 테스트 스위트를 만들고 코드에 수정이 생길 때마다 반복적으로 단위 테스트와 리팩토링을 할 수 있어야 한다.  
 
@@ -122,7 +122,7 @@ class MregeRequest:
             return MergeRequestStatus.REJECTED
         elif len(self._context["upvotes"]) >= 2:
             return MergeRequestStatus.APPROVED
-        	return MergeRequestStatus.PENDING
+        return MergeRequestStatus.PENDING
         
     def _cannot_vote_if_closed(self):
         if self._status == MergeRequestStatus.CLOSED:
@@ -415,19 +415,19 @@ def test_rejected_to_approved(rejected_mr):
 
 ### 목(mock) 객체
 
-모의 객체는 원하지 않는 부작용으로부터 테스트 코드를 보호하는 좋은 방법이다.  
+목 객체는 원하지 않는 부작용으로부터 테스트 코드를 보호하는 좋은 방법이다.  
 
-외부의 다른 서비스나 모듈 등 실제 사용하는 것들을 사용하지 않고 테스트 대상 시스템을 모의 객체로 교체하여 테스트의 효용성을 높일 수 있다.  
+외부의 다른 서비스나 모듈 등 실제 사용하는 것들을 사용하지 않고 테스트 대상 시스템을 목 객체로 교체하여 테스트의 효용성을 높일 수 있다.  
 
 
 
 #### Mock 객체 사용하기
 
-단위 테스트에서의 테스트 더블에는 더미(dummy), 스텁(stub), 스파이(spy), 모의(mock)와 같은 다양한 타입의 객체가 있다. 
+단위 테스트에서의 테스트 더블에는 더미(dummy), 스텁(stub), 스파이(spy), 목(mock)과 같은 다양한 타입의 객체가 있다. 
 
 [^테스트 더블]: 테스트 스위트에서 실제 코드를 대신해 실제인 것처럼 동작하는 코드
 
-이 중에서 목 객체는 가장 일반적인 유형의 객체이므로 모의 객체를 살펴보자.  
+이 중에서 목 객체는 가장 일반적인 유형의 객체이므로 목 객체를 살펴보자.  
 
 `목(mock) 객체`는 호출 시 응답해야하는 값이나 행동을 특정할 수 있으며  
 
@@ -445,7 +445,7 @@ Mock 객체는 내부에 호출 방법을 기록하고 나중에 이 정보를 �
 
 ##### 테스트 더블 사용 예
 
-모의객체를 사용하여 애플리케이션에 머지 리퀘스트의 빌드 상태를 알리는 컴포넌트를 추가해보자.  
+목객체를 사용하여 애플리케이션에 머지 리퀘스트의 빌드 상태를 알리는 컴포넌트를 추가해보자.  
 
 빌드가 끝나면 머지 리퀘스트 아이디와 빌드 상태를 파라미터로 하여 객체를 호출하고  
 
@@ -577,6 +577,7 @@ def build_status():
     bstatus = BuildStatus(Mock)
     bstatus.build_date = Mock(return_value="2018-01-01T00:00:01")
     return bstatus
+    
 def test_build_notification_sent(build_status):
     build_status.notify(1234, "OK")
     
@@ -643,8 +644,3 @@ TDD(Test-Driven Development)은 기능의 결함으로 실패하게 될 테스�
 3. 리팩토링을 통한 코드 개선
 
 이 사이클을 `red-green-refactor`라고도 부른다.  
-
-
-
-
-
