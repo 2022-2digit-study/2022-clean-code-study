@@ -50,7 +50,121 @@
 **파이썬에서 모듈은 이미 싱글턴이라는 것을 의미한다.**
 > 즉 여러 번 `import` 하더라도 `sys.modules`에 로딩되는 것은 항상 한 개다.
 
-### 공유상태
-객체가 어떻게 호출, 생성 또는 초기화 되는지에 상관없이 하나의 인스턴스만 갖는 싱글턴을 사용하는 것보다는 여러 인스턴스에서 사용할 수 있도록 데이터를 복제하는 것이 좋다.
+### 모노 스테이트 패턴(SNGMONO)
+모노 스테이트 패턴은 싱글턴인지 아닌지에 상관 없이 일반 객체처럼 많은 인스턴스를 만들어야 한다는 것이다.
+> 모든 멤버변수를 static(python에서는 클래스 변수)으로 선언한 경우 해당 인스턴스는 모노 스테이트 패턴을 따랐다고 본다.
+
+#### 장점
+* 투명한 방법으로 정보를 동기화하기 때문에 사용자는 내부에서 어떻게 동작하는지 전혀 신경쓰지 않아도 된다.
+* 에러가 발생할 가능성이 적다.
+
+#### 모노 스테이트 패턴을 활용한 예 (Feat. Discriptor)
+```python
+class GitFetcher:
+    _current_tag = None
+    
+    def __init__(self, tag) :
+        self.current_tag = tag
+    
+    @property
+    def current_tag(self) :
+        if not self._current_tag:
+            raise AttributeError( "tag가 초기화되지 않음" )
+        return self._current_tag
+    
+    @current_tag.setter
+    def current_tag(self, new_tag):
+        self.__class__._current_tag = new_tag
+    
+    def pull(self):
+        logger.info( "%s에서 풀", self.current_tag)
+        return self.current_tag
+   
+   
+   
+>>> f1 = GitFetcher(0.1)
+>>> f2 = GitFetcher(0.2)
+>>> f1.current_tag = 0.3
+>>> f2.pull()
+0.3
+>>> f1.pull()
+0.3
+```
+
+디스크럽터를 생성하는 데코레이터를 활용하여, `f1.current_tag = 0.3` 에 닿는 순간 디스크럽터를 통해 인스턴스에 동기화되는 것을 알 수 있다.
+
+이는 실제 디스크럽터를 구현하면 조금 많은 코드가 필요하지만, 구체적인 책임을 분리하여 각각이 응집력을 갖게 하므로 하나의 책임을 준수할 수 있게 된다. (SRP)
+
+```python
+class SharedAttribute:
+    def __init__(self, initial_value=None) :
+        self.value = initial_va lue
+        self._name = None
+    
+    def __get__(self, instance, owner) :
+        if instance is None:
+            return self
+        if self.value is None :
+            raise AttributeError(f"{ self._name} was never set ")
+        return self.value
+    
+    def __set__(self, instance, new_value):
+        self.value = new_value
+    
+    def __set_name__(self, owner, name) :
+        self._name = name
+
+
+# 활용하기
+class GitFetcher:
+    current_tag = SharedAttribute()
+    current_branch = SharedAttribute()
+    
+    def __init__(self, tag, branch=None):
+        self.current_tag = tag
+        self.current_branch = branch
+    def pull(self):
+        logger.info( "%s에서 플" , self.current_tag)
+        return self.current_tag
+```
+
+이제 이 로직을 반복한다면 그저 GitFetcher클래스 처럼 인스턴스를 클래스 변수로 등록하기만 하면 된다. DRY(Don't Repeat Yourself)원칙을 자연스럽게 준수할 수 있다.
+
+
+### Borg 패턴
+이전의 솔루션은 대부분의 경우에서 잘 작동하나, 죽어도 싱글턴을 사용해야 하는 경우라면 최후의 대안이 있다.
+
+```python
+class BaseFetcher:
+    def __init__(self, source):
+        self.source = source
+
+
+class TagFetcher(BaseFetcher):
+    _attributes = {}
+    
+    def __init__(self, source) :
+        self.__dict__ = self.__class__._attributes
+        super().__init__(source)
+    
+    def pull(self):
+        logger.info("%s태그에서 풀", self.source)
+        return f"Tag = {self.source}"
+
+
+class BranchFetcher(BaseFetcher):
+    _attributes = {}
+    
+    def __init__(self, source):
+        self.__dict__ = self.__class__._attributes
+        super().__init__(source)
+    
+    def pull(self):
+        logger.info("%s 브랜치에서 풀", self.source)
+        return f"Branch = {self.source}"
+```
+
+엄청난 것처럼 보이지만 실상은 클래스 변수를 두고 해당 클래스 변수를 멤버변수의 `__dict__` 속성에 계속 갱신해 줄 뿐이다.
+
 
 
