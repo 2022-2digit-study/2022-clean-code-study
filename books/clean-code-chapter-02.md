@@ -109,7 +109,7 @@ with open(filename) as fd:
 
 ### 컨텍스트 관리자 구현
 
-컨텍스트 관리자는 일반적으로 `__enter__`와 `__exit__` 두 개의 매직 메서드만 구현하면 되지만, contextlib 모듈을 사용하여 더 쉽게 구현할 수도 있다.
+컨텍스트 관리자는 일반적으로 `__enter__`와 `__exit__` 두 개의 매직 메서드만 구현하면 되지만, `contextlib` 모듈을 사용하여 더 쉽게 구현할 수도 있다.
 
 `__enter__` 메서드가 호출되면 새로운 컨텍스트로 진입하게 되며
 
@@ -142,9 +142,9 @@ def offline_backup():
 
 ### 파이썬에서의 밑줄
 
-일반적으로 파이썬에서의 변수나 메소드 이름 앞의 밑줄은 private를 의미한다.
+일반적으로 파이썬에서의 변수나 메소드 이름 앞의 밑줄은 `private`를 의미한다.
 
-_(단, private를 의미만 할 뿐 private하게 만들 수는 없다. 자세한 내용은 뒤에 설명)_
+> _(단, `private`를 의미만 할 뿐 `private`하게 만들 수는 없다. 자세한 내용은 뒤에 설명)_
 
 그런데 밑줄 두 개는 전혀 다른 `name mangling`이라는 것을 실행한다.
 
@@ -154,9 +154,8 @@ _(단, private를 의미만 할 뿐 private하게 만들 수는 없다. 자세�
 
 따라서 가끔 `name mangling`이 전혀 다른 이름을 만들어내어 본래의 이름으로는 해당 속성에 접근할 수 없게 되기 때문에 
 
-**밑줄 두 개를 작성하는 것이 정말 private하게 만든다고 생각하는 사람이 있는데 이는 매우 잘못된 생각이다.**
+**밑줄 두 개를 작성하는 것이 정말 `private`하게 만든다고 생각하는 사람이 있는데 이는 매우 잘못된 생각이다.**
 
-~~(이중 밑줄은 파이썬스러운 코드가 아니라고 한다)~~
 
 ```python
 class Connector:
@@ -190,11 +189,11 @@ AttributeError: 'Connector' object has no attribute '__timeout2'
 - 객체에 값을 저장해야 하는 경우
 - 객체의 상태나 다른 속성의 값으로 어떤 계산을 하려고 하는 경우
 
-타 언어에서 getter-setter를 만드는 것과 동일하다.
+타 언어에서 `getter`, `setter`를 만드는 것과 동일하다.
 
-`@property` 데코레이터는 일반적인 getter와 역할이 같으며
+`@property` 데코레이터는 일반적인 `getter`와 역할이 같으며
 
-`@<property>.setter`데코레이터는 setter와 역할이 같다.
+`@<property>.setter`데코레이터는 `setter`와 역할이 같다.
 
 ```python
 class User:
@@ -230,17 +229,18 @@ class User:
 
 `@<property>.setter`데코레이터는 무언가를 하기 위한 command이다. 
 
-[^Command Query Separation(CQS)]: Betrand Meyer에 의해 정리된 개념. 질의(query)와 명령(command)을 정확히 분리하는 것을 목적으로 함, 질의는 결과만 반환하고 상태는 변화시키지 않으며 명령은 결과는 반환하지 않고 상태만 변경시킴
+#### Command Query Separation(CQS)
+> Betrand Meyer에 의해 정리된 개념. 질의(query)와 명령(command)을 정확히 분리하는 것을 목적으로 함, 질의는 결과만 반환하고 상태는 변화시키지 않으며 명령은 결과는 반환하지 않고 상태만 변경시킴
 
 
 
 ### 파이썬에서의 프로퍼티
 
-일반적인 프로그래밍 언어는 public, private, protected 세 가지 프로퍼티를 가지지만
+일반적인 프로그래밍 언어는 `public`, `private`, `protected` 세 가지 프로퍼티를 가지지만
 
-**파이썬은 모든 프로퍼티와 함수가 public하다.** 따라서 호출자가 **모든 객체의 속성을 호출할 수 있다.**
+**파이썬은 모든 프로퍼티와 함수가 `public`하다.** 따라서 호출자가 **모든 객체의 속성을 호출할 수 있다.**
 
-`밑줄(언더스코어)`을 사용하여 다른 언어처럼 private를 의미할 수 있지만, 여전히 호출은 할 수 있다.
+`밑줄(언더스코어)`을 사용하여 다른 언어처럼 `private`를 의미할 수 있지만, 여전히 호출은 할 수 있다.
 
 
 
@@ -265,12 +265,12 @@ class User:
 
 ## 컨테이너 객체
 
-`__contains__()` 메서드를 구현한 객체, 일반적으로 Boolean값을 반환하도록 구현
+`__contains__()` 메서드를 구현한 객체, 일반적으로 `Boolean`값을 반환하도록 구현
 
 해당 키워드는 `in` 키워드가 발견될 때 호출됨.
 
 ### 사용 예
-x, y를 멤버변수로 갖고 있는 coord가 그리드의 영역에 있는지 검사하고 표시하고 싶을 때, 일반적인 구현은 다음과 같음
+`x`, `y`를 멤버변수로 갖고 있는 `coord`가 그리드의 영역에 있는지 검사하고 표시하고 싶을 때, 일반적인 구현은 다음과 같음
 
 ```python
 # less Pythonic
@@ -278,7 +278,7 @@ def mark_coordinate(grid, coord):
     if 0 <= coord.x < grid.width and 0 <= coord.y < grid.height:
         grid[coord] = MARKED
 ```
-▲ 직관적으로 x, y가 무엇을 하는 지 알아보기 힘듦
+▲ 직관적으로 `x`, `y`가 무엇을 하는 지 알아보기 힘듦
 
 
 ```python
@@ -310,7 +310,7 @@ def mark_coordinate(grid, coord):
     if coord in grid:
         grid[coord] = MARKED
 ```
-▲ in절을 통해 직관적으로 Grid 안에 있는지 체크하는 듯한 느낌을 받을 수 있음.
+▲ `in`절을 통해 직관적으로 `Grid` 안에 있는지 체크하는 듯한 느낌을 받을 수 있음.
 
 ### 장점
 1. 외부에서 사용할 때 해당 코드들은 마치 파이썬이 문제를 해결한 것처럼 보임
@@ -330,7 +330,8 @@ def mark_coordinate(grid, coord):
 >>> car_info['name']
 'Ferarri'
 ```
-딕셔너리는 불변의 값, 즉 수정이 불가능한 자료를 키로 사용하여 자료를 저장하는 해쉬맵 자료구조이다.(파이썬의 딕셔너리는 매우 효율적이라고 알려져 있다.)
+딕셔너리는 불변의 값, 즉 수정이 불가능한 자료를 키로 사용하여 자료를 저장하는 해쉬맵 자료구조이다. 
+> _(파이썬의 딕셔너리는 매우 효율적이라고 알려져 있다.)_
 
 > 특히 동적인 자료구조를 저장하는데 있어 딕셔너리(≒ Hash Map)의 경우 다른 자료구조에서 거의 유일하게 키(`key`)라는 값을 이용해서 사용자가 제어할 수 있는 자료구조이니 알아두는 편이 좋다.
 
@@ -350,7 +351,7 @@ print( f" name: {my_car.name} color: {my_car.color}")
 
 ### \_\_getattr\_\_
 
-my_car.name을 호출하면 파이썬은 객체의 사전에서 name을 찾아서 `__getattribute__`를 호출한다. 
+`my_car.name`을 호출하면 파이썬은 객체의 사전에서 `name`을 찾아서 `__getattribute__`를 호출한다. 
 객체에 찾고 있는 속성이 없는 경우 속성 이름을 파라미터로 전달하여 `__getattr__('name')`을 호출한다.<br>
 이 값을 사용하면 반환 값을 제어할 수도 있고, 심지어는 새로운 속성을 만들어 낼 수 있다.<br>
 
@@ -371,7 +372,7 @@ class DynamicAttributes:
 >>> dyn.attribute
 'value'
 ```
-▲ attribute 호출
+▲ `attribute` 호출
 
 ```python
 >>> dyn.fallback_test 
