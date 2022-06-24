@@ -640,13 +640,14 @@ TypeError: can't send non-None value to a just-started generator
 ```python
 @prepare_coroutine
 def stream_db_records(db_handler):
-    retrieved_data = None page_size = 10
+    retrieved_data = None 
+    page_size = 10
     try:
         while True:
             page_size = (yield retrieved_data) or page_size 
             retrieved_data = db_handler.read_n_records(page_size)
     except GeneratorExit: 
-        db_ handler.close()
+        db_handler.close()
 		
 		
 		

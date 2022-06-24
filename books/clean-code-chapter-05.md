@@ -220,21 +220,23 @@ class LoginEvent:
 #### 데코레이터 구현
 
 ```python
+from functools import wraps
+
 RETRIES_LIMIT = 3
 
 def with_retry(retries_limit = RETRIES_LIMIT, allowed_exceptions = None):
     allowed_exceptions = allowed_exceptions or (ControlledException,)
     def retry(operation):
-       @wraps(operation)
-       def wrapped(*args, **kwargs):
-           last_raised = None
-           for _ in range(retries_limit):
-               try:
+        @wraps(operation)
+        def wrapped(*args, **kwargs):
+            last_raised = None
+            for _ in range(retries_limit):
+                try:
                    return operation(*args, **kwargs)
-               except allowed_exceptions as e:
-                   logger.info("retrying %s due to %s ", operation, e)
-                   last_raised = e
-           raise last_raised
+                except allowed_exceptions as e:
+                    logger.info("retrying %s due to %s ", operation, e)
+                    last_raised = e
+            raise last_raised
 
         return wrapped
 
@@ -411,7 +413,7 @@ def traced_function_wrong(function):
 @traced_function_wrong
 def process_with_delay(callback, delay=0):
     time.sleep(delay) 
-    return callback( )
+    return callback()
 ```
 실행을 직접 해 보아도 의도한 결과대로 동작하는 듯 하다.<br>
 <br>
