@@ -16,8 +16,6 @@
 ```python
 def original(...):
     ...
-
-
 original = modifier(original)
 ```
 
@@ -415,7 +413,7 @@ def process_with_delay(callback, delay=0):
     time.sleep(delay) 
     return callback( )
 ```
-실행을 직접 해보아도 의도한 결과대로 동작하는 듯 하다.<br>
+실행을 직접 해 보아도 의도한 결과대로 동작하는 듯 하다.<br>
 <br>
 위 함수는 얼핏보면 문제 없이 보이나 중대한 문제가 있다.
 해당 함수를 대화형 인터프리터에서 `import` 해보면,
@@ -467,7 +465,7 @@ def traced_function_wrong(function):
 #### 모듈의 공용 레지스트리에 객체 등록하기
 ```python
 EVENTS_REGISTRY = {}
-def register_event(event_cls) :
+def register_event(event_cls):
     """모듈에서 접근 가능하도록 이벤트 클래스를 레지스트리에 등록""" 
     EVENTS_REGISTRY[event_cls.__name__] = event_cls
     return event_cls
@@ -571,7 +569,6 @@ TypeError: wrapped() takes 1 positional argument but 2 were given
 이 문제를 해결하려면 메서드와 함수에 대해서 동일하게 동작하는 데코레이터를 만들어야 한다.<br>
 디스크립터 프로토콜을 구현한 데코레이터 객체를 만든다.<br>
 
-~~디스크립터는 7장 “제너레이터 사용하기”에서 Giraffe님이 자세히 알아볼 예정~~
 
 ```python
 from functools import wraps 
@@ -591,12 +588,9 @@ class inject_db_driver:
             return self
         return self.__class__(MethodType(self.function, instance))
 ```
-~~잘 모르겠어서 논리를 같이 읽어보았으면 좋겠습니다.~~<br>
-<br>
+
 현재 상황에서는 호출할 수 있는 객체를 메서드에 다시 바인딩한다는 정도만 알면 된다. <br>
 즉 함수를 객체에 바인딩하고 데코레이터를 새로운 호출 가능 객체로 다시 생성한다.<br>
-<br>
-
 
 
 ## 데코레이터와 관심사의 분리
@@ -613,7 +607,7 @@ def traced_function(function):
         logger.info( "%s 함수 실행" , function .__qualname__) 
         start_time = time.time()
         result = function(*args, **kwargs)
-        logger.info("함수 %s 처리 소요시간 %.2fs", function .__qualname__ , time.time( ) - start_time)
+        logger.info("함수 %s 처리 소요시간 %.2fs", function .__qualname__, time.time( ) - start_time)
         return result 
     return wrapped
 ```
@@ -632,7 +626,7 @@ def log_execution(function):
     @functools.wraps(function)
     def wrapped(*args, **kwargs):
         logger.info( "started execution of %s", function.__qualname__)
-        return function(*kwargs, **kwargs) 
+        return function(*args, **kwargs) 
     return wrapped
 
 def measure_time(function): 
@@ -642,6 +636,7 @@ def measure_time(function):
         result = function(*args, **kwargs)
         logger.info("function %s took %.2f", function.__qualname__, time.time() - start_time)
         return result
+    return wrapped
 ```
 
 로깅도 시간이 들어가며, 반복적으로 호출되는 함수의 경우 로그 확인을 어렵게 할 수도 있다.<br>
