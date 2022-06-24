@@ -30,7 +30,7 @@ class SystemMonitor :
 <br>
 만약 위 경우 데이터 구조를 바꾸는 등의 이유로 이 중에 어떤 것이라도 수정해야 한다면 `SystemMonitor` 클래스를 변경해야 한다.
 
-### Object 분리와 추상화 ~~(feat. 신 타락시키기)~~
+### Object 분리와 추상화 
 
 <img width="400" alt="image" src="https://user-images.githubusercontent.com/59782504/170297355-89983e35-6088-4ddd-87c3-c5a0bc5e5364.png">
 
@@ -307,7 +307,4 @@ _(duck typing원리란 어떤 새가 오리처럼 걷고 오리처럼 꽥꽥 소
 
 시스템의 변경, 수정, 확장에서의 유연성을 확보하기 위해 추상화(인터페이스)를 사용하는 것은 중요하다.  
 
-~~예시가 나와있지만 9장에서 Giraffe님이 10장에서 Erin님이 또 멋지게 다뤄준다고 한다.~~
-
-~~대체 9장과 10장에는 무슨 내용이 담긴걸까~~
 
