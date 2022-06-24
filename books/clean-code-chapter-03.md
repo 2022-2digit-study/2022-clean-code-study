@@ -76,9 +76,6 @@ _(단, 항상 모든 것을 적용해야하는 것은 아니다)_
 
 또한 사전조건에 대한 검사, 사후조건에 대한 검사, 핵심 기능에 대한 구현을 구분하는 것이 좋다.  
 
-~~(너무 일반적인 말들만..)~~
-
-
 
 ## 방어적(defensive) 프로그래밍
 
@@ -248,9 +245,9 @@ _(단, 항상 모든 것을 적용해야하는 것은 아니다)_
 
 2. Traceback 노출을 하지 않아야 한다.
 
-   : traceback에 포함된 다양한 디버깅 정보는 악의적 사용자에게도 유용한 정보이므로 지적 재산 유출이 발생할 위험이 있다.  
+   : `traceback`에 포함된 다양한 디버깅 정보는 악의적 사용자에게도 유용한 정보이므로 지적 재산 유출이 발생할 위험이 있다.  
 
-   따라서 예외가 있는 경우 효율적 문제 해결을 위해 traceback정보나 기타 수집가능한 정보를 로그로 남기되,  
+   따라서 예외가 있는 경우 효율적 문제 해결을 위해 `traceback`정보나 기타 수집가능한 정보를 로그로 남기되,  
 
    사용자에게 해당 정보를 보이지 말고 일반적인 메세지를 사용하는 것이 좋다.  
 
@@ -258,19 +255,17 @@ _(단, 항상 모든 것을 적용해야하는 것은 아니다)_
 
      
 
-3. 비어있는 except 블록을 지양해야한다.
+3. 비어있는 `except` 블록을 지양해야한다.
 
    : 너무 방어적이어서 실패해야 할 경우에도 실패하지 않게 된다.   
 
    파이썬의 안티패턴 중 가장 악마같은 경우이며, 파이썬의 철학 중 `에러는 결코 조용히 전달되어서는 안된다.`는 것과도 위배되는 파이썬스럽지 못한 코드이다.
 
-   ~~(아무래도 화가 잔뜩 난 것을 보니 글 쓴 사람이 여기에 많이 데인 듯 하다.)~~
-
-   보다 구체적인 예외를 사용하고 except 블록에서 실제 오류를 처리하는 것이 좋다.  
+   보다 구체적인 예외를 사용하고 `except` 블록에서 실제 오류를 처리하는 것이 좋다.  
 
    구체적 예외는 사용자는 무엇을 기대하는지 알게 되어 유지보수가 쉬우며 버그판단도 쉽다.   
 
-   또한 except 블록에서 자체 예외 처리(예외로깅 등), 기본 값 반환  등으로 처리하는 것도 방법이다.  
+   또한 `except` 블록에서 자체 예외 처리(예외로깅 등), 기본 값 반환  등으로 처리하는 것도 방법이다.  
 
    ```python
    try:
@@ -342,11 +337,6 @@ assert result > 0, f"에러 {result}"
 
 저수준의 디자인(코드)뿐만 아니라 더 높은 수준의 추상화와도 관련있는 내용으로  
 
-~~나중에 Erin님이 마지막 장 클린 아키텍처에서 멋지게 마저 설명할 예정이다~~  
-
-~~(계획표 짠 사람 나와)~~   
-
-  
 
 소프트웨어에서 관심사를 분리하는 목표는 **파급효과를 최소화하여 유지보수성을 향상시키는 것**이다.  
 
@@ -392,7 +382,6 @@ assert result > 0, f"에러 {result}"
 
 좋은 소프트웨어 관행을 약어로 소개한다.  
 
-~~정식 학술 용어는 아니며 경험, 논문, 책에 있는 내용들임~~   
 
 
 
@@ -516,7 +505,6 @@ LBYL은 코드를 실행하기 전에 무엇을 사용하려고 하는지 확인
 
 파이썬은 EAFP방식으로 만들어져있다.   
 
-~~아니 그럼 LBYL은 안맞는거 아닌가요~~  
 
 일반적으로 코드를 실행하면서 발생하는 예외를 catch하고 except블록에서 바로잡는 코드를 실행한다.
 
@@ -570,6 +558,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 #### 2. 인터페이스 정의
 인터페이스는 Java와 같은 언어에서는 특정한 형태로 선언할 수 있으나, 파이썬에서는 이를 디폴트로 지원하지 않는다.<br>
+
 인터페이스는 협업 상황에서 메서드, 멤버변수가 구현체가 없이 선언만 존재하는 클래스를 지칭하는 것으로, 파이썬에서는 추상클래스를 통해 다음과 같이 구현한다.
 ```python
 class CarInterface(metaclass=ABCMeta):
@@ -588,7 +577,7 @@ class Ferarri(CarInterface):
 ```
 
 #### 3. 예외
-앞서 설명했던 예외처리와 같이 모든 예외는 `Exception`에서 파생된다. 이것은 `except Exception:`과 같은 구문을 사용한다면 모든 예외를 catch할 수 있게된다는 것을 의미한다 
+앞서 설명했던 예외처리와 같이 모든 예외는 `Exception`에서 파생된다. 이것은 `except Exception:`과 같은 구문을 사용한다면 모든 예외를 `catch` 할 수 있게된다는 것을 의미한다 
 
 ## 상속 안티패턴
 > 상속은 `"A는 B이다"` 즉 is a 관계가 성립되어야 한다. 
@@ -596,10 +585,12 @@ class Ferarri(CarInterface):
 ### Case. 개발자가 코드 재사용만을 목적으로 상속을 사용.
 
 ```python
-	class TransactionalPolicy(collections.UserDict):
-		"""잘못된 상속의 예"""
-		def change_in_policy(self, customer_id, **new_policy_data):
-			self[customer_id].update(**new_policy_data)
+import collections
+
+class TransactionalPolicy(collections.UserDict):
+     """잘못된 상속의 예"""
+     def change_in_policy(self, customer_id, **new_policy_data):
+         self[customer_id].update(**new_policy_data)
 ```
 #### 문제점
 1. 사용자는 `TransactionalPolicy`라는 이름을 보았을 때 직관적으로 딕셔너리임을 파악할 수 없으며, `public` 인터페이스를 통해 노출된 `public` 메서드들을 확인하게 되면 특이하게 전문화된 이상한 계층구조라고 느끼게 됨.
@@ -619,18 +610,18 @@ class Ferarri(CarInterface):
 
 ```python
 class TransactionalPolicy:
-	"""컴포지션 을 사용한 리팩토링 예제"""
-	def __ init__ (self, policy_data , **extra_data):
-		self. _data = {**policy_data, **extra_data}
-		
-	def change_in_policy(self, customer_id, **new_policy_data):
-		self._data[customer_id].update(**new_policy_data)
-		
-	def __ getitem__ (self, customer_id):
-		return self._data[customer_id]
-		
-	def __len__(self):
-		return len(self._data)
+    """컴포지션 을 사용한 리팩토링 예제"""
+    def __init__(self, policy_data , **extra_data):
+        self._data = {**policy_data, **extra_data}
+        
+    def change_in_policy(self, customer_id, **new_policy_data):
+        self._data[customer_id].update(**new_policy_data)
+        
+    def __getitem__(self, customer_id):
+        return self._data[customer_id]
+        
+    def __len__(self):
+        return len(self._data)
 ```
 
 해당 관계는 기존의 상속관계를 포함(Composition)관계로 변경한 것이다. 포함관계는 has a관계로 `A는 B를 가지고 있다.`라는 관계가 성립해야 사용한다.
@@ -640,9 +631,6 @@ class TransactionalPolicy:
 다중상속 자체를 할 일이 현실에 많지 않음.
 * 한 사물이 A,B,C 클래스가 있을 때 A클래스가 B와도 is a 관계가, C와도 is a 관계가 성립하는 것이 쉽지 않기 떄문.
 * 따라서 올바르게 사용될 때만 유효한 해결책이 될 수 있으므로, 어댑터 패턴과 믹스인(mixin)을 사용하게 되었음.
-
-~~(9장에서 Giraffe님이 멋지게 다룰 예정)~~
-
 
 
 ### 죽음의 다이아몬드
@@ -671,7 +659,7 @@ class BaseModule:
 		
 		
 class BaseModule1(BaseModule): 
-	module _ name = "module-1"
+	module_name = "module-1"
 	
 	
 class BaseModule2(BaseModule): 
@@ -723,7 +711,7 @@ class BaseTokenizer:
 
 호출 결과
 ```python
->>> tk = BaseTokenizer(" 28a2320b-fd3f-4627-9792-a2b38e3c46b0") 
+>>> tk = BaseTokenizer("28a2320b-fd3f-4627-9792-a2b38e3c46b0") 
 >>> list(tk)
 ['28a2320b' 'fd3f' '4627' , '9792' , 'a2b38e3c46b0']
 ```
@@ -731,8 +719,8 @@ class BaseTokenizer:
 #### 기본 클래스를 변경하지 않고 값을 대문자로 변환하기
 ```python
 class UpperIterableMixin: 
-	def __iter__(self):
-		return map(str.upper, super().__iter__()) # super()가 정의되어 있지 않다.
+    def __iter__(self):
+        return map(str.upper, super().__iter__()) # super()가 정의되어 있지 않다.
 
 class Tokenizer(UpperiterableMixin, BaseTokenizer): 
 	pass
@@ -748,7 +736,7 @@ class Tokenizer(UpperiterableMixin, BaseTokenizer):
 
 
 믹스인은 이처럼 새로운 코드 없이 상속만으로 새로운 기능을 구현하는 좋은 방법론이다.
-> 만약 python이 컴파일 언어였다면, `UpperlterableMixin`클래스가 호출하는 `super()`이 명확하지 않기 때문에 컴파일 단계에서 오류를 호출할 것이다. ~~오늘도 어김없이 놀라운 파이썬이다.~~
+> 만약 python이 컴파일 언어였다면, `UpperlterableMixin`클래스가 호출하는 `super()`이 명확하지 않기 때문에 컴파일 단계에서 오류를 호출할 것이다.
 
 ## 함수와 인자
 > 앞서 파라미터에 가변인자를 넣으면 안된다는 내용(2장에서 다루었음)과 가변인자를 매개변수로 전달하는 내용에 대한 부분이 있으나, 이미 다룬 내용이며, 상식적인 수준이라 제외하였음.
@@ -772,7 +760,7 @@ def print_my_classes(*classnames):
 패킹은 함수의 인자 뿐 아니라 다른 방향에서도 이를 활용할 수 있다.
 ```python
 >>> def f(first, second, third): 
-...		print(first)
+...	    print(first)
 ... 	print(second) 
 ... 	print(third)
 ...
@@ -804,7 +792,7 @@ def bad_users_from_rows(dbrows) -> list:
 def users_from_rows(dbrows) -> list : 
 	"""DB 레코드에서 사용자 생성""" 
 	return [
-		User(user_ id, first_ name, last_name)
+		User(user_id, first_name, last_name)
 		for (user_id, first_name, last_name) in dbrows
 	]
 ```
@@ -824,15 +812,14 @@ def purchase(car_name, car_price, car_quentity, consumer_name, consumer_balance,
 	...
 	
 ```
-이 경우 보다시피 `purchase()`함수가 무엇을 처리하는지 알기 어렵다.<br>
+이 경우 보다시피 `purchase()` 함수가 무엇을 처리하는지 알기 어렵다.<br>
 _(구매에만 관여하는지, 구매후 재고에도 관여하는지, 직원의 포인트를 관리하는지 등)_<br>
 <br>
 
 이 경우 두가지 문제점이 있다.<br>
 
-<br>
 1. 적절한 추상화가 이루어지지 않아 한눈에 함수를 파악하기 어렵다는 점
-2. 특정 작업을 하도록 의도되었기 때문에 다른 환경에서 `purchase()`함수를 사용하기 힘들다는 점
+2. 특정 작업을 하도록 의도되었기 때문에 다른 환경에서 `purchase()` 함수를 사용하기 힘들다는 점
 
 ### 해결책
 
@@ -844,39 +831,39 @@ _(구매에만 관여하는지, 구매후 재고에도 관여하는지, 직원�
 
 ```python
 class Product:
-	def __init__(self, name, price, quentitiy)
-		self.name = name
-		self.price = price
-		self.quentity = quentity
-	...
-	
+    def __init__(self, name, price, quantity):
+        self.name = name
+        self.price = price
+        self.quentity = quantity
+    ...
+    
 class Car(Product):
-	...
+    ...
 
 class Person:
-	def __init__(self, name)
-		self.name = name
-	...
+    def __init__(self, name):
+        self.name = name
+        ...
 
 class Customer(Person):
-	def __init__(self, balance, **kwargs)
-		super().__init__(**kwargs)
-		self.balance
-	...
+    def __init__(self, balance, **kwargs):
+        super().__init__(**kwargs)
+        self.balance = balance
+        ...
 
 class Employee(Person):
-	def __init__(self, point, **kwargs):
-		super().__init__(**kwargs)
-		self.point = point
-	...
+    def __init__(self, point, **kwargs):
+        super().__init__(**kwargs)
+        self.point = point
+        ...
 
 def purchase(product: Product):
-	product.quentity -= 1
-	...
-	
+    product.quentity -= 1
+    ...
+    
 def sell(employee):
-	employee.point += 10
-	...
+    employee.point += 10
+    ...
 ```
 
 클래스가 추가되어 코드 길이는 길어졌지만, 확장성과 추상화 측면에서 보다 쉽게 코드를 이해할 수 있다. <br>
@@ -888,12 +875,11 @@ def sell(employee):
 > 이전 파트에서 다루었기 때문에 다시 다루진 않는다. 다만, 가변인자는 만능의 해결책은 아니다. 매우 동적이어서 유지보수하기가 어렵기 때문이다. 해당 값이 어떤 파라미터인지 찾아서 이를 분기하고 있다면, 함수를 분리하라는 신호일 수 있다.
 
 ```python
-def purchase(*arg)
-	car_sell(arg[0:3]) 
-	...
+def purchase(*arg):
+    car_sell(arg[0:3]) 
+    ...
 ```
 
-~~예를 들어 위의 경우 더 꼴보기 싫어질 수 있다.~~
 
 이전 방법(구체화)가 통하지 않으면 함수의 파라미터를 \*args, \*\*kwargs 등으로 변경하여 다양한 파라미터를 받도록 허용할 수 있다. <br>
 <br>
@@ -907,13 +893,13 @@ def purchase(*arg)
 ```python
 
 def calculate_price(base_price: float, tax: float, discount: float) -> float:
-	return (base_price * (1 + tax)) * (1 - discount)
+    return (base_price * (1 + tax)) * (1 - discount)
 
 def show_price(price: float) -> str: 
-	return "$ {0:,.2f}".format(price)
+    return "$ {0:,.2f}".format(price)
 	
 def str_final_price(base_price: float, tax: float, discount: float , fmt_function=str) -> str: 
-	return fmt_function(calculate_price(base_price, tax, discount))
+    return fmt_function(calculate_price(base_price, tax, discount))
 ```
 위쪽 두 개의 함수는 독립성을 갖는다. 하나를 변경해도 다른 하나는 변경되지 않는다.
 마지막 함수는 아무것도 전달하지 않으면 문자열 변환을 기본 표현 함수로 사용하고 사용자 정의 함수를 전달하면 해당 함수를 사용해 문자열을 포맷한다.
@@ -938,6 +924,3 @@ def str_final_price(base_price: float, tax: float, discount: float , fmt_functio
 특히 여러 정의(클래스, 함수, 상수)가 들어있는 큰 파일을 만드는 것은 좋지 않다.<br>
 <br> 
 극단적으로 하나의 파일에 하나의 정의만 유지하라는 것은 아니지만(실제로 자바는 클래스 단위로 극단적으로 정리한다), 좋은 코드라면 유사한 컴포넌트끼리 정리하여 구조화해야 한다.
-
-~~모듈 분리와 파이썬 패키지 생성에 대한 자세한 내용은 10 장 "클린 아키텍처" Erin님이 멋지게 다루어주실 예정 ^^.~~
-
