@@ -209,12 +209,12 @@ class User:
             raise ValueError("유효한 이메일이 아니므로 사용할 수 없음.")
        	self._email = new_email
         
->>> user = User("Erin")
->>> user.email = "erin"
+>>> user = User("clean_user")
+>>> user.email = "clean_user"
 유효한 이메일이 아니므로 사용할 수 없음.
->>> user.email = "erin@2digit.io"
+>>> user.email = "clean_user@example.com"
 >>> user.email
-'erin@2digit.io'
+'clean_user@example.com'
 ```
 
 
@@ -227,9 +227,7 @@ class User:
 
 `@<property>.setter`데코레이터는 무언가를 하기 위한 command이다. 
 
-#### Command Query Separation(CQS)
-> Betrand Meyer에 의해 정리된 개념. 질의(query)와 명령(command)을 정확히 분리하는 것을 목적으로 함, 질의는 결과만 반환하고 상태는 변화시키지 않으며 명령은 결과는 반환하지 않고 상태만 변경시킴
-
+[^Command Query Separation(CQS)]: Betrand Meyer에 의해 정리된 개념. 질의(query)와 명령(command)을 정확히 분리하는 것을 목적으로 함, 질의는 결과만 반환하고 상태는 변화시키지 않으며 명령은 결과는 반환하지 않고 상태만 변경시킴
 
 
 ### 파이썬에서의 프로퍼티
@@ -248,8 +246,6 @@ class User:
 
 - 이터러블: `__iter__` 매직 메서드를 구현한 객체
 - 이터레이터: `__next__` 매직 메서드를 구현한 객체
-
-
 
 
 파이썬은 기본적으로 반복가능한 리스트, 튜플 등이 있다.
