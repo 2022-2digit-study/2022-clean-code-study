@@ -14,7 +14,7 @@
 
 1. 가능한 작게 유지해야하며
 2. 하나의 잘 정의된 책임을 가져야하고
-3.  수정이 쉬워 확장성이 좋아야하며
+3. 수정이 쉬워 확장성이 좋아야하며
 4. 높은 응집력과 낮은 결합력을 가져야한다
 
 고 했었다.   
@@ -49,7 +49,7 @@
 
 [^Screaming Architecture]: 소프트웨어의 구조가 소리치듯이 구조만 봐도 어떤 서비스 인지 알 수 있어야 한다는 의미를 가지고 있다. 이 구조는 소프트웨어가 무슨 기능을 하는지에 초점을 맞춰 구조를 설계한다.
 
-특히,  디스크 저장 방법이나 라이브러리같은 세부사항이 아닌 시스템이 무엇을 하는가가 중요하다.  
+특히, 디스크 저장 방법이나 라이브러리같은 세부사항이 아닌 시스템이 무엇을 하는가가 중요하다.  
 
 4장의 SOLID원칙에서 의존성 역전 원칙(DIP)을 적용하는 것도 도움이 되지만, 이것으로는 충분하지 않다.  
 
@@ -57,14 +57,11 @@
 
 아키텍처의 관점에서는 파이썬의 abc모듈이나 덕타이핑을 지원하지 않기 때문에, 의존성 전체를 추상화해야한다.  
 
-따라서  컴포넌트를 애플리케이션에서 임포트하여 사용하되 애플리케이션의 로직을 몰라야하며,  
+따라서 컴포넌트를 애플리케이션에서 임포트하여 사용하되 애플리케이션의 로직을 몰라야하며,  
 
 데이터베이스도 애플리케이션 자체에 대해 아무것도 몰라야한다. (Hexagonal Architecture)
 
 [^Hexagonal Architecture]: 어플리케이션의 코어가 각 어댑터와 상호작용하기 위해 특정 포트를 제공하는 아키텍처
-
-![헥사고날아키텍처](https://user-images.githubusercontent.com/55227276/175467200-99180df3-34a0-4c7c-82a8-e9366e094051.png)
-
 
 
 ## 소프트웨어 컴포넌트
@@ -89,7 +86,7 @@
 
 파이썬 패키징의 핵심은 다음과 같다.  
 
-1.  플랫폼에 독립적이며 로컬 설치에 의존하지 않는지 테스트하고 검증을 해야한다.
+1. 플랫폼에 독립적이며 로컬 설치에 의존하지 않는지 테스트하고 검증을 해야한다.
 2. 단위 테스트를 패키지에 같이 배포하지 않는다.
 3. 의존성을 분리한다.
 4. 가장 많이 요구되는 명령에 대해서 진입점을 만드는 것이 좋다.
@@ -205,52 +202,52 @@ from typing import Union
 class DispatchedOrder:
     """방금 수신한 배달 주문"""
     status = "dispatched"
-    def __ init __ (self, when):
+    def __init__ (self, when):
         self._when = when
         
     def message(self) -> dict:
         return {
             "status": self.status,
-            "msg" : "주문 시각 {0}" .format(
-                self . _w hen . isoformat ( )
+            "msg" : "주문 시각 {0}".format(
+                self._when.isoformat()
             ),
         }
         
 class OrderlnTransit:
     """배달 중인 주문"""
-    status = "in transit"
-    def __ init __ (self, current_location) :
-        self . _ current_ location = current_ location
+    status = "intransit"
+    def __init__(self, current_location) :
+        self._current_location = current_location
         
     def message(self) -> dict:
         return {
-            " status " : self.status ,
+            "status": self.status ,
             "msg": "배달중 ...（현재 위치: {})".format(self._current_location),
         }
         
 class OrderDelivered:
     """배달 완료 주문"""
-    status = "delivered "
-    def __ init __ (self, delivered_at):
+    status = "delivered"
+    def __init__(self, delivered_at):
         self._delivered_at = delivered_at
         
     def message(self) -> dict:
         return {
             "status": self.status,
-            "msg" : "배달 완료 시각 {0}" . format(self._delivered _a t.isoformat()),
+            "msg": "배달 완료 시각 {0}".format(self._delivered_at.isoformat()),
         }
         
 class DeliveryOrder :
-    def __ init __ (
+    def __init__(
         self,
         delivery_id: str,
-        status: Un ion[DispatchedOrder, OrderlnTrans it, OrderDeli vered],
+        status: Union[DispatchedOrder, OrderlnTransit, OrderDelivered],
     ) -> None:
-        self._delivery_id = delivery_ id
+        self._delivery_id = delivery_id
         self._status = status
         
     def message(self) -> dict:
-        return {"id" : self._delivery_id, **self._status.message()}
+        return {"id": self._delivery_id, **self._status.message()}
 ```
 
 > 이 코드를 보는 것만으로 클라이언트의 모습을 상상할 수 있음
@@ -266,7 +263,7 @@ from storage import DBClient, DeliveryStatusQuery, OrderNotFoundError
 from web import NotFound, Vi ew, app, register_route
 
 class DeliveryView(View) :
-    async def _get(self, request, delivery_ id: int):
+    async def _get(self, request, delivery_id: int):
         dsq = DeliveryStatusQuery(int(delivery_id), await DBClient())
         try:
             result = await dsq.get()
@@ -295,7 +292,7 @@ register_route(DeliveryView, "/status/<delivery_ id:int>")
 
 우리는 패키지 내부를 보지 않고도 패키지가 애플리케이션의 세부 기술에 대한 인터페이스처럼 동작할 것이라고 생각하고 있다.  
 
-이 애플리케이션은 패키지 내부 객체에 어뎁터 디자인 패턴의 구현이 있을 것이라고 생각할 수 있다.  
+이 애플리케이션은 패키지 내부 객체에 어터 디자인 패턴의 구현이 있을 것이라고 생각할 수 있다.  
 
 애플리케이션에서 사용하는 의존성은 반드시 API를 따라야 하며, 이는 어댑터 패턴을 통해 이룰 수 있기 때문이다.  
 
@@ -355,9 +352,9 @@ setup (
 )
 ```
 
-> setup함수의 install_requires인자는 의존성을 선언하는 부분에서 패키지를 만들 때 필요로하는 것을 모두 설치해야 하므로 작성
+> setup함수의 `install_requires`인자는 의존성을 선언하는 부분에서 패키지를 만들 때 필요로하는 것을 모두 설치해야 하므로 작성
 >
-> setup함수의 entry_points 인자는 진입점을 만드는 것이며, 패키지 설치 시 모든 의존성과 함께 이 디렉토리를 공유, 등호의 왼쪽(status-service)이 진입점의 이름임
+> setup함수의 `entry_points` 인자는 진입점을 만드는 것이며, 패키지 설치 시 모든 의존성과 함께 이 디렉토리를 공유, 등호의 왼쪽(status-service)이 진입점의 이름임
 
 가상환경은 의존성을 포함하고 있는 특정 프로젝트의 디렉토리 구조이며 다음 두 가지 하위 디렉토리에 대해 알아보자.  
 
@@ -386,7 +383,7 @@ RUN pip install /app/libs/web/app/libs/storage
 RUN pip install /app
 
 EXPOSE 8080
-CMD ("/usr/local/bin/status-service"]
+CMD ("/usr/local/bin/status-service")
 ```
 
 > 파이썬 이미지를 기반으로하고, 운영체제 의존성을 설치
