@@ -1,9 +1,6 @@
 # [Chapter 8. 단위 테스트와 리팩토링]
 
 
-
-
-
 ## 디자인 원칙과 단위 테스트
 
 `단위 테스트`는 다른 코드의 일부분이 유효한지를 검사하는 코드이다. 
@@ -205,13 +202,13 @@ class TestMergeRequestStatus(unittest.TestCase):
     def test_cannot_upvote_on_closed_merge_request(self):
         self.merge_request.close()
         self.assertRaises(
-        	MergeRequestException, self.merge_request.upvote, "dev1"
+            MergeRequestException, self.merge_request.upvote, "dev1"
         )
         
     def test_cannot_down_vote_on_closed_merge_request(self):
         self.merge_request.close()
         self.assertRaisesRegex(
-        	"종료된 머지 리퀘스트에 투표할 수 없음", self.merge_request.upvote, "dev1"
+            "종료된 머지 리퀘스트에 투표할 수 없음", self.merge_request.upvote, "dev1"
         )
 ```
 
@@ -284,7 +281,7 @@ class TestAcceptanceThreshold(unittest.TestCase):
 
 `pytest`는 테스트 프레임워크로 `assert`구문을 사용해 조건을 검사하는 것이 가능하기 때문에 보다 자유롭다.  
 
-또한 `pytest` 명령어를 통해 탐색가능한 모든 테스트를 한 번에 실행한다.(unittest로 작성한 테스트까지..!)
+또한 `pytest` 명령어를 통해 탐색가능한 모든 테스트를 한 번에 실행한다.(unittest로 작성한 테스트도 실행함)
 
 이전의 예제는 `pytest`를 통해 다음과 같이 다시 작성할 수 있다. 
 
@@ -311,7 +308,7 @@ def test_cannot_vote_on_closed_merge_request(self):
     merge_request.close()
     pytest.raises(MergeRequestException, merge_request.upvote, "dev1")
     with pytest.raises(
-    	MergeRequestException,
+        MergeRequestException,
         match = "종료된 머지 리퀘스트에 투표할 수 없음",
     ):
         merge_request.downvote("dev1")
@@ -405,7 +402,7 @@ def test_rejected_to_approved(rejected_mr):
 
 즉, 코드 커버리지는 **휴먼 에러를 최대한 방지할 수 있도록 도와줄 수 있다.**
 
-코드 커버리지가 높은 것은 좋은 것이지만, 클린 코드를 위한 조건으로는 부족하다. (이것이 맹점이라 지적하고 있음)  
+코드 커버리지가 높은 것은 좋은 것이지만, 클린 코드를 위한 조건으로는 부족하다. (이것이 코드 커버리지의 맹점임)  
 
 왜냐하면 라인이 실행되었다는 것이 가능한 모든 조합에 대해 테스트되었다는 것을 의미하지 않기 때문이다.  
 
@@ -501,9 +498,6 @@ def test_build_notification_sent(mock_requests):
 ```
 
 
-
-
-
 ## 리팩토링
 
 `리팩토링`은 소프트웨어 유지 관리에서 중요한 활동이다.  
@@ -555,7 +549,7 @@ class BuildStatus:
         }
         
     def deliver(self, payload):
-        response = self.trasport.post(self.endpoint, json=payload)
+        response = self.transport.post(self.endpoint, json=payload)
         response.raise_for_status()
         return response
     
@@ -588,7 +582,7 @@ def test_build_notification_sent(build_status):
     }
     
     build_status.transport.post.assert_called_with(
-    	build_status.endpoint, json=expected_payload
+        build_status.endpoint, json=expected_payload
     )
 ```
 
@@ -609,7 +603,7 @@ def test_build_notification_sent(build_status):
 
 이는 테스트를 실패하게 만드는 데이터를 찾는 것이다.  
 
- `hypothesis`라이브러리를 통해 속성 기반 테스트를 수행할 수 있으며,  라이브러리에 코드에 유효한 가설을 정의하면 된다.  
+ `hypothesis`라이브러리를 통해 속성 기반 테스트를 수행할 수 있으며, 라이브러리에 코드에 유효한 가설을 정의하면 된다.  
 
   
 
