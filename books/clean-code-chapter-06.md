@@ -225,9 +225,9 @@ class ProtectedAttribute:
 class User:
     """admin 권한을 가진 사용자만 이메일 주소를 삭제할 수 있음"""
     
-    emain = ProtectedAttribute(requires_role="admin")
+    email = ProtectedAttribute(requires_role="admin")
     
-    def __init__(self, username: str, email: str. permission_list: list = None) -> None:
+    def __init__(self, username: str, email: str, permission_list: list = None) -> None:
         self.username = username
         self.email = email
         self.permissions = permission_list or []
@@ -577,6 +577,7 @@ class Traveller:
 방금의 예제에서 디스크립터를 사용한 것은 아래와 같은 장점이 있다. 
 
 - 클라이언트의 코드가 상당히 간단해진다.
+
 - 어떤 비지니스 로직도 포함되어있지 않기 때문에 완전 다른 클래스에서도 사용이 가능하다.
 
 (디스크립터는 비지니스 로직의 구현보다는 라이브러리, 프레임워크 또는 내부 API를 정의하는데 적합하다.)  
@@ -721,9 +722,7 @@ class DescriptorClass:
 
 프로퍼티는 디스크립터의 특수한 개념으로 디스크립터가 더 다양하고 복잡한 작업에 사용될 수 있다.  
 
-또 다른 재사용 도구인 데코레이터
-
-디스크립터는 데코레이터의 `3의 규칙(Three instance rule)`을 적용한다.  
+디스크립터는 또 다른 재사용 도구인 데코레이터의 `3의 규칙(Three instance rule)`을 적용한다.  
 
 디스크립터는 비지니스 코드가 아닌 구현 코드가 많이 포함되어야하며, 비지니스 로직에서 사용할 새로운 객체나 데이터 구조를 정의하는 것과 비슷하다.  
 
@@ -731,11 +730,11 @@ class DescriptorClass:
 
 #### 클래스 데코레이터 피하기
 
-"데코레이터를 사용해 코드개선하기" 에서 이벤트 객체의 직렬화 방식을 결정하기 위해 아래와 같이 두 개의 클래스 데코레이를 사용하여 구현했었다.  
+"데코레이터를 사용해 코드개선하기" 에서 이벤트 객체의 직렬화 방식을 결정하기 위해 아래와 같이 두 개의 클래스 데코레이터를 사용하여 구현했었다.  
 
 ```python
 @Serializaion(
-	username=show_original,
+    username=show_original,
     password=hide_field,
     ip=show_original,
     timestamp=format_time,
@@ -863,7 +862,7 @@ method(MyClass())
 
 ### 슬롯
 
-파이썬의 `__slots__` 매직 메서드를 사용하면 클래스가 기대하는 특정 속성만을 정의하며 , 정의되지 않은 동적 속성에 대해 AttributeError를 발생시킨다.  
+파이썬의 `__slots__` 매직 메서드를 사용하면 클래스가 기대하는 특정 속성만을 정의하며, 정의되지 않은 동적 속성에 대해 AttributeError를 발생시킨다.  
 
 한 마디로 클래스가 정적이 되고 더이상 `__dict__`속성을(=동적 속성을) 갖지 않게 된다.  
 
