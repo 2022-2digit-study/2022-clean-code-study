@@ -172,13 +172,13 @@ _(단, 항상 모든 것을 적용해야하는 것은 아니다)_
                    self.connection = self._connector.connect()
                except ConnectionError as e:
                    logger.info(
-                   	f"{e}: 새로운 연결 시도 {self.retry_threshold}"
+                       f"{e}: 새로운 연결 시도 {self.retry_threshold}"
                    )
                    time.sleep(self.retry_threshold)
                else:
                    return self.connection
            raise ConnectionError(
-           	f"{self.retry_n_times} 번째 재시도 연결 실패"
+               f"{self.retry_n_times} 번째 재시도 연결 실패"
            )
        def send(self, data):
            return self.connection.send(data)
@@ -209,7 +209,7 @@ _(단, 항상 모든 것을 적용해야하는 것은 아니다)_
                return connector.connect()
            except ConnectionError as e:
                logger.info(
-               	f"{e}: 새로운 연결 시도 {retry_threshold}"
+                   f"{e}: 새로운 연결 시도 {retry_threshold}"
                )
                time.sleep(retry_threshold)
                
@@ -229,7 +229,7 @@ _(단, 항상 모든 것을 적용해야하는 것은 아니다)_
            
        def deliver_event(self, event):
            self.connection = connect_with_retry(
-           	self._connector, self.retry_n_times, self.retry_threshold
+               self._connector, self.retry_n_times, self.retry_threshold
            )
            self.send(event)
            
@@ -461,7 +461,7 @@ class ComplicatedNamespace:
         return instance
     
 >>> cn = ComplicatedNAmespace.init_with_data(
-		  id_=42, user="root", location="127.0.0.1", extra="excluded"
+             id_=42, user="root", location="127.0.0.1", extra="excluded"
 	)
 >>> cn.id_, cn.user, cn.location
 (42, 'root', '127.0.0.1')
@@ -521,7 +521,7 @@ try:
     with open(filename) as f:
         pass
 except FileNotFoundError as e:
-        logger.error(e)
+    logger.error(e)
 ```
 
 
