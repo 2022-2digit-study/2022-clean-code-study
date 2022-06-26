@@ -202,7 +202,7 @@ from typing import Union
 class DispatchedOrder:
     """방금 수신한 배달 주문"""
     status = "dispatched"
-    def __init__ (self, when):
+    def __init__(self, when):
         self._when = when
         
     def message(self) -> dict:
@@ -260,9 +260,9 @@ class DeliveryOrder :
 
 ```python
 from storage import DBClient, DeliveryStatusQuery, OrderNotFoundError
-from web import NotFound, Vi ew, app, register_route
+from web import NotFound, View, app, register_route
 
-class DeliveryView(View) :
+class DeliveryView(View):
     async def _get(self, request, delivery_id: int):
         dsq = DeliveryStatusQuery(int(delivery_id), await DBClient())
         try:
